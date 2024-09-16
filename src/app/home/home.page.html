@@ -1,0 +1,53 @@
+<ion-header [translucent]="true" class="custom-header">
+  <ion-toolbar>
+    <ion-title>SkeletonAPP</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" padding>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Profile</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Bienvenido, {{ username }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="firstName" name="firstName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Apellido</ion-label>
+        <ion-input [(ngModel)]="lastName" name="lastName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Nivel de Educación</ion-label>
+        <ion-select [(ngModel)]="educationLevel" name="educationLevel">
+          <ion-select-option value="basica">Básica</ion-select-option>
+          <ion-select-option value="media">Media</ion-select-option>
+          <ion-select-option value="superior">Superior</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Fecha de Nacimiento</ion-label>
+        <ion-input [(ngModel)]="birthDate" name="birthDate" type="date"></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" (click)="showAlert()">Mostrar</ion-button>
+      <ion-button expand="full" color="medium" (click)="clearFields()">Limpiar</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer class="custom-footer">
+  <ion-toolbar>
+    <ion-title>Aplicación creada por Equipo Avengers</ion-title>
+  </ion-toolbar>
+</ion-footer>

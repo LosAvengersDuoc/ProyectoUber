@@ -1,0 +1,58 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      <h1>SkeletonAPP</h1>
+      <h6>subtitulo</h6>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Login</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Username</ion-label>
+      <ion-input
+        [(ngModel)]="username"
+        name="username"
+        type="text"
+        maxlength="8"
+        minlength="3"
+        pattern="[A-Za-z0-9]+"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+        maxlength="4"
+        minlength="4"
+        pattern="\d{4}"
+        required
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="validateLogin()">Ingresa</ion-button>
+
+  <ion-list>
+    <ion-item *ngIf="message">
+      {{ message }}
+    </ion-item>
+    <ion-item>
+      <ion-button [routerLink]="['/home']">Ir a Home</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-button [routerLink]="['/profile']">Ir a Profile</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
