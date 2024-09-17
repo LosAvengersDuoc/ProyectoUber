@@ -1,0 +1,14 @@
+# Ignorar la caché de Angular
+.angular/cache/
+
+# También puedes incluir esta línea si deseas ignorar todo dentro de .angular
+.angular/
+
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de paquetes grandes
+*.pack
+
+# Ignorar otros archivos temporales
+.DS_Store
