@@ -1,6 +1,6 @@
 # Proyecto Uber
 
-Este es un proyecto de aplicación móvil creado con Ionic para el curso de Aplicaciones Móviles en Duoc.
+Este es un proyecto de aplicación móvil creado con Ionic para el curso de Aplicaciones Móviles en Duoc uc.
 
 ## Instalación
 
