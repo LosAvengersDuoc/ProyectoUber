@@ -14,6 +14,7 @@ export class ProfilePage implements OnInit {
   lastName: string = '';
   educationLevel: string = '';
   birthDate: string = '';
+  hasVehicle: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -57,7 +58,8 @@ export class ProfilePage implements OnInit {
       firstName: this.firstName,
       lastName: this.lastName,
       educationLevel: this.educationLevel,
-      birthDate: this.birthDate
+      birthDate: this.birthDate,
+      hasVehicle: this.hasVehicle
     };
     localStorage.setItem('profile', JSON.stringify(profile));
     alert('Perfil guardado correctamente.');
@@ -70,7 +72,8 @@ export class ProfilePage implements OnInit {
       this.firstName = profile.firstName;
       this.lastName = profile.lastName;
       this.educationLevel = profile.educationLevel;
-      this.birthDate = profile.birthDate || '';
+      this.birthDate = profile.birthDate;
+      this.hasVehicle = profile.hasVehicle;
     }
   }
   

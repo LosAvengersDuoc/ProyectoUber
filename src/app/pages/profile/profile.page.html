@@ -16,15 +16,15 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item>
-          <ion-label>Nombre: </ion-label>
+          <ion-label position="floating">Nombre</ion-label>
           <ion-input [(ngModel)]="firstName" placeholder="Nombre"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Apellido: </ion-label>
+          <ion-label position="floating">Apellido</ion-label>
           <ion-input [(ngModel)]="lastName" placeholder="Apellido"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Nivel de Educación:</ion-label> <!-- Alineado a la derecha -->
+          <ion-label>Nivel de Educación: </ion-label> <!-- Alineado a la derecha -->
           <ion-select [(ngModel)]="educationLevel" placeholder="Seleccionar" slot="end">
             <ion-select-option value="Básico">Básico</ion-select-option>
             <ion-select-option value="Medio">Medio</ion-select-option>
@@ -47,6 +47,11 @@
             </ng-template>
             </ion-modal>
         </ion-item>
+
+        <ion-item>
+            <ion-label>¿Tienes vehículo?</ion-label>
+            <ion-toggle [(ngModel)]="hasVehicle" slot="end"></ion-toggle>
+          </ion-item>
       </ion-card-content>
     </ion-card>
     <ion-button expand="block" (click)="saveProfile()">Guardar Cambios</ion-button>
