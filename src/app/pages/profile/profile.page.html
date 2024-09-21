@@ -1,13 +1,54 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-header>
     <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
+      <ion-title>Perfil</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="goHome()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
-</ion-content>
+  
+  <ion-content [fullscreen]="true">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información del Perfil</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Nombre: </ion-label>
+          <ion-input [(ngModel)]="firstName" placeholder="Nombre"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido: </ion-label>
+          <ion-input [(ngModel)]="lastName" placeholder="Apellido"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Nivel de Educación:</ion-label> <!-- Alineado a la derecha -->
+          <ion-select [(ngModel)]="educationLevel" placeholder="Seleccionar" slot="end">
+            <ion-select-option value="Básico">Básico</ion-select-option>
+            <ion-select-option value="Medio">Medio</ion-select-option>
+            <ion-select-option value="Superior">Superior</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha de Nacimiento:</ion-label>
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+                <ion-datetime
+                id="datetime"
+                presentation="date"
+                [(ngModel)]="birthDate"
+                locale="es-ES"
+                [value]="getFormattedBirthDate()"
+                (ionChange)="onDateChange($event)"
+                ></ion-datetime>
+            </ng-template>
+            </ion-modal>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+    <ion-button expand="block" (click)="saveProfile()">Guardar Cambios</ion-button>
+  </ion-content>
+  
