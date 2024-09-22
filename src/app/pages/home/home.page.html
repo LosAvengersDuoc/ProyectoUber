@@ -1,18 +1,34 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Bienvenido a TeLlevoAPP</ion-title>
+  <ion-toolbar color="dark">
+    <ion-title class="ion-text-center">TeLlevoAPP</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>¡Bienvenido a TeLlevoAPP!</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Organiza tu transporte de manera fácil y rápida.
-    </ion-card-content>
-  </ion-card>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <h3>¡Bienvenido usuario!</h3>
+  <p>Organiza tu transporte de manera fácil y rápida.</p>
+
 
   <ion-button expand="block" routerLink="/profile">Ver Perfil</ion-button>
 </ion-content>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home"></ion-icon>
+      Inicio
+    </ion-tab-button>
+    <ion-tab-button tab="apps">
+      <ion-icon name="apps"></ion-icon>
+      Servicios
+    </ion-tab-button>
+    <ion-tab-button tab="reader">
+      <ion-icon name="reader"></ion-icon>
+      Actividad
+    </ion-tab-button>
+    <ion-tab-button tab="person">
+      <ion-icon name="person"></ion-icon>
+      Perfil
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
