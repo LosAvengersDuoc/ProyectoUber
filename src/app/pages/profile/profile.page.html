@@ -1,34 +1,83 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
+        <ion-title>Perfil</ion-title>
     </ion-toolbar>
-  </ion-header>
+</ion-header>
+  
+<ion-content [fullscreen]="true">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Información del Perfil</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-label position="floating">Nombre</ion-label>
+                <ion-input [(ngModel)]="firstName" [disabled]="!isEditing" placeholder="Nombre"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-label position="floating">Apellido</ion-label>
+                <ion-input [(ngModel)]="lastName" [disabled]="!isEditing" placeholder="Apellido"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Nivel de Educación:</ion-label>
+                <ion-select [(ngModel)]="educationLevel" [disabled]="!isEditing" placeholder="Seleccionar" slot="end">
+                    <ion-select-option value="Básico">Básico</ion-select-option>
+                    <ion-select-option value="Medio">Medio</ion-select-option>
+                    <ion-select-option value="Superior">Superior</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Fecha de Nacimiento:</ion-label>
+                <ion-datetime-button datetime="datetime" [disabled]="!isEditing"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime
+                            id="datetime"
+                            presentation="date"
+                            [(ngModel)]="birthDate"
+                            locale="es-ES"
+                            [value]="getFormattedBirthDate()"
+                            [disabled]="!isEditing"
+                            (ionChange)="onDateChange($event)"
+                        ></ion-datetime>
+                    </ng-template>
+                </ion-modal>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>¿Tienes vehículo?</ion-label>
+                <ion-toggle [(ngModel)]="hasVehicle" [disabled]="!isEditing" slot="end"></ion-toggle>
+            </ion-item>
+            
+            <br>
+            <ion-button expand="block" *ngIf="!isEditing" (click)="enableEditing()">Modificar Perfil</ion-button>
+            <ion-button expand="block" *ngIf="isEditing" (click)="saveProfile()">Guardar Cambios</ion-button>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
 
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" routerLink="/home">
-      <ion-icon name="home"></ion-icon>
-      Inicio
-    </ion-tab-button>
-    <ion-tab-button tab="apps">
-      <ion-icon name="apps"></ion-icon>
-      Servicios
-    </ion-tab-button>
-    <ion-tab-button tab="reader">
-      <ion-icon name="reader"></ion-icon>
-      Actividad
-    </ion-tab-button>
-    <ion-tab-button tab="person" routerLink="/profile">
-      <ion-icon name="person"></ion-icon>
-      Perfil
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+<ion-toolbar>
+    <ion-tabs>
+        <ion-tab-bar slot="bottom">
+            <ion-tab-button tab="home" routerLink="/home">
+                <ion-icon name="home"></ion-icon>
+                Inicio
+            </ion-tab-button>
+            <ion-tab-button tab="apps">
+                <ion-icon name="apps"></ion-icon>
+                Servicios
+            </ion-tab-button>
+            <ion-tab-button tab="reader">
+                <ion-icon name="reader"></ion-icon>
+                Actividad
+            </ion-tab-button>
+            <ion-tab-button tab="person" routerLink="/profile">
+                <ion-icon name="person"></ion-icon>
+                Perfil
+            </ion-tab-button>
+        </ion-tab-bar>
+    </ion-tabs>
+</ion-toolbar>
