@@ -16,6 +16,8 @@ export class ProfilePage implements OnInit {
   birthDate: string = '';
   hasVehicle: boolean = false;
 
+  isEditing: boolean = false;  // Estado de edición
+
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -31,11 +33,9 @@ export class ProfilePage implements OnInit {
   }
 
   onDateChange(event: any) {
-    // Asegúrate de que el valor recibido sea una fecha válida
     const selectedDate = new Date(event.detail.value);
     if (!isNaN(selectedDate.getTime())) {
-      // Guarda la fecha en el formato ISO
-      this.birthDate = selectedDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      this.birthDate = selectedDate.toISOString().split('T')[0];
     } else {
       alert('Fecha seleccionada no es válida.');
     }
@@ -61,8 +61,14 @@ export class ProfilePage implements OnInit {
       birthDate: this.birthDate,
       hasVehicle: this.hasVehicle
     };
+    
     localStorage.setItem('profile', JSON.stringify(profile));
     alert('Perfil guardado correctamente.');
+    this.isEditing = false;  // Deshabilitar la edición después de guardar
+  }
+
+  enableEditing() {
+    this.isEditing = true;  // Habilitar el modo de edición
   }
 
   loadProfile() {
@@ -76,23 +82,22 @@ export class ProfilePage implements OnInit {
       this.hasVehicle = profile.hasVehicle;
     }
   }
-  
-  // Método para obtener la fecha formateada para mostrarla
+
   getFormattedBirthDate(): string {
-    if (!this.birthDate) return ''; // Retorna vacío si birthDate no está definido
-  
+    if (!this.birthDate) return '';
+
     const date = new Date(this.birthDate);
-    if (isNaN(date.getTime())) return ''; // Retorna vacío si la fecha es inválida
-  
+    if (isNaN(date.getTime())) return '';
+
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexed
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-  
+
     return `${day}-${month}-${year}`;
   }
 
   clearLocalStorage() {
-    localStorage.clear();  // Elimina todos los datos en Local Storage
+    localStorage.clear();
     alert('Memoria local vaciada.');
-  } 
+  }
 }
