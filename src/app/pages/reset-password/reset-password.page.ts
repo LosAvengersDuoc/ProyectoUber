@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -8,21 +7,9 @@ import { Router } from '@angular/router';
 })
 export class ResetPasswordPage implements OnInit {
 
-  password: string = '';
-  confirmPassword: string = '';
+  constructor() { }
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {}
-
-  resetPassword() {
-
-    if (this.password === this.confirmPassword) {
-
-      this.router.navigate(['/login']);
-    } else {
-
-      alert('Passwords do not match');
-    }
+  ngOnInit() {
   }
+
 }
