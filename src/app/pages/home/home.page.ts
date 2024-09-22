@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { addIcons } from 'ionicons'; // Importa los iconos
-import { home, apps, reader, person } from 'ionicons/icons';
-
-@Component({
+import { home, apps, reader, person } from 'ionicons/icons';@Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
