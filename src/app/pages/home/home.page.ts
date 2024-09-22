@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-
-@Component({
+import { addIcons } from 'ionicons'; // Importa los iconos
+import { home, apps, reader, person } from 'ionicons/icons';@Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
@@ -19,7 +19,9 @@ export class HomePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private alertController: AlertController
-  ) {}
+  ) {
+    addIcons({ home, apps, reader, person });
+  }
 
   ngOnInit() {
     
