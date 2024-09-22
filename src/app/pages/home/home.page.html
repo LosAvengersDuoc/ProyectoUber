@@ -1,20 +1,28 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="dark">
-    <ion-title class="ion-text-center">TeLlevoAPP</ion-title>
+  <ion-toolbar>
+    <ion-segment value="all">
+      <ion-segment-button value="all">
+        <ion-label>Viajes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="favorites">
+        <ion-label>Transporte</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar class="buscador" show-clear-button="focus" animated="true" placeholder="¿A dónde vas?"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <h3>¡Bienvenido usuario!</h3>
-  <p>Organiza tu transporte de manera fácil y rápida.</p>
-
-
-  <ion-button expand="block" routerLink="/profile">Ver Perfil</ion-button>
+  <p>Organiza tu viaje de manera fácil y rápida.</p>
 </ion-content>
 
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home">
+    <ion-tab-button tab="home" routerLink="/home">
       <ion-icon name="home"></ion-icon>
       Inicio
     </ion-tab-button>
@@ -26,7 +34,7 @@
       <ion-icon name="reader"></ion-icon>
       Actividad
     </ion-tab-button>
-    <ion-tab-button tab="person">
+    <ion-tab-button tab="person" routerLink="/profile">
       <ion-icon name="person"></ion-icon>
       Perfil
     </ion-tab-button>
