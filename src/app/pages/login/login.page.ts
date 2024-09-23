@@ -22,14 +22,12 @@ export class LoginPage {
       return;
     }
 
-    
     const passwordRegex = /^\d{4}$/;
     if (!passwordRegex.test(this.password)) {
       this.message = 'La contraseña debe ser un número de 4 dígitos.';
       return;
     }
 
-    
     if (this.username === 'admin' && this.password === '1234') {
       let extras: NavigationExtras = {
         state: { user: this.username }
@@ -38,8 +36,7 @@ export class LoginPage {
     } else {
       this.message = 'Login con error';
     }
-    
-    
+
     console.log('Username:', this.username);
     console.log('Password:', this.password);
   }

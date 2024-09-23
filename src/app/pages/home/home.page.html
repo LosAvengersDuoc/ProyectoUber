@@ -8,6 +8,13 @@
         <ion-label>Transporte</ion-label>
       </ion-segment-button>
     </ion-segment>
+
+    <!-- Botón de Cerrar Sesión en la esquina derecha -->
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { addIcons } from 'ionicons'; // Importa los iconos
-import { home, apps, reader, person } from 'ionicons/icons';@Component({
+import { addIcons } from 'ionicons';
+import { home, apps, reader, person } from 'ionicons/icons';
+
+@Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
@@ -24,7 +26,6 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    
     this.activatedRoute.queryParams.subscribe(params => {
       const navigation = this.router.getCurrentNavigation();
       const state = navigation?.extras.state as { user?: string };
@@ -48,5 +49,10 @@ export class HomePage implements OnInit {
     this.firstName = '';
     this.lastName = '';
     this.educationLevel = '';  
+  }
+
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 }
