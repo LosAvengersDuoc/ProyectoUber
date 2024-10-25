@@ -21,6 +21,7 @@
 <ion-content [fullscreen]="true" class="ion-padding">
   <h3>¡Bienvenido {{displayName}}!</h3>
   <p>Organiza tu viaje de manera fácil y rápida.</p>
+
   <ion-toolbar>
     <ion-searchbar class="buscador" show-clear-button="focus" animated="true" placeholder="¿A dónde vas?"></ion-searchbar>
   </ion-toolbar>
@@ -32,7 +33,7 @@
       <ion-card-title>Destino: San Miguel</ion-card-title>
       <ion-card-subtitle>Hora de partida: 22:10 hrs.</ion-card-subtitle>
     </ion-card-header>
-  
+
     <ion-card-content>
       Viaje grupal de 4 personas a la comuna de San Miguel en auto<br>
       cerca del Paradero 13 Gran Avenida. <br>
@@ -43,6 +44,18 @@
       <ion-button>Unirse</ion-button> <ion-button [disabled]="true">Salir</ion-button>
     </ion-card-content>
   </ion-card>
+
+  <!-- Espaciado para el diseño -->
+  <div style="flex: 1;"></div>
+
+  <!-- Botón para ir a Reset Password en la parte inferior -->
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button expand="full" color="primary" (click)="goToResetPassword()" style="margin: 16px; border-radius: 8px; background-color: #3880ff; color: white;">
+        Ir a Restablecer Contraseña
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>
 
 <ion-toolbar>

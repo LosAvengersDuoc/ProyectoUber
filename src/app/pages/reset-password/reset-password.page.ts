@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./reset-password.page.scss'],
 })
 export class ResetPasswordPage implements OnInit {
-
+  username: string = '';
   password: string = '';
   confirmPassword: string = '';
 
@@ -16,13 +16,18 @@ export class ResetPasswordPage implements OnInit {
   ngOnInit() {}
 
   resetPassword() {
-
     if (this.password === this.confirmPassword) {
-
       this.router.navigate(['/login']);
     } else {
-
       alert('Passwords do not match');
     }
+  }
+
+  goToHome() {
+    this.router.navigate(['/home']);
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 }
