@@ -7,15 +7,20 @@ import { NavigationExtras, Router } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-
   username: string = '';
   password: string = '';
   message: string = '';
 
+  users: { username: string, password: string }[] = [
+    { username: 'admin', password: '1234' },
+    { username: 'admin1', password: '1234' },
+    { username: 'admin2', password: '1234' },
+    { username: 'admin3', password: '1234' },
+  ];
+
   constructor(private router: Router) {}
 
   validateLogin() {
-   
     const usernameRegex = /^[A-Za-z0-9]{3,8}$/;
     if (!usernameRegex.test(this.username)) {
       this.message = 'El nombre de usuario debe tener entre 3 y 8 caracteres alfanuméricos.';
@@ -28,10 +33,11 @@ export class LoginPage {
       return;
     }
 
-    if (this.username === 'admin' && this.password === '1234') {
+    const user = this.users.find(u => u.username === this.username && u.password === this.password);
+    if (user) {
       let extras: NavigationExtras = {
         state: { user: this.username }
-      }
+      };
       this.router.navigate(['/home'], extras);
     } else {
       this.message = 'Login con error';

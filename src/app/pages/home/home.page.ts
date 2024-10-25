@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { home, apps, reader, person } from 'ionicons/icons';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-home',
@@ -11,46 +12,46 @@ import { home, apps, reader, person } from 'ionicons/icons';
 })
 export class HomePage implements OnInit {
 
-  username: string = '';
-  firstName: string = '';
-  lastName: string = '';
-  educationLevel: string = '';  // Modelo para el select
-  birthDate: string = '';
+  displayName: string = '';
+  username: string = localStorage.getItem('username') || '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private storage: Storage
   ) {
     addIcons({ home, apps, reader, person });
+    this.storage.create();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       const navigation = this.router.getCurrentNavigation();
       const state = navigation?.extras.state as { user?: string };
       if (state && state.user) {
-        this.username = state.user;
+        localStorage.setItem('username', state.user);
       }
+
+      this.loadProfile();
     });
+  }
+
+  async loadProfile() {
+    const savedProfile = await this.storage.get(`profile_${this.username}`);
+    if (savedProfile) {
+      this.displayName = savedProfile.firstName + " " + savedProfile.lastName;
+    }
   }
 
   async showAlert() {
     const alert = await this.alertController.create({
       header: 'Información del Usuario',
-      message: `Nombre: ${this.firstName} ${this.lastName} 
-      Nivel de Educación: ${this.educationLevel}`,
+      message: `Nombre: ${this.displayName}`,
       buttons: ['OK']
     });
     await alert.present();
   }
-
-  clearFields() {
-    this.firstName = '';
-    this.lastName = '';
-    this.educationLevel = '';  
-  }
-
 
   logout() {
     this.router.navigate(['/login']);

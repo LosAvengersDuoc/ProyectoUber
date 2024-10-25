@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonDatetime } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-profile',
@@ -15,21 +16,26 @@ export class ProfilePage implements OnInit {
   educationLevel: string = '';
   birthDate: string = '';
   hasVehicle: boolean = false;
+  username: string = '';
 
-  isEditing: boolean = false;  // Estado de edición
+  isEditing: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private storage: Storage) {
+    this.storage.create();
+  }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.username = localStorage.getItem('username') || "";
+
+    if(this.username.length >= 1) {
+        console.log(`Cargando perfil para el usuario: ${this.username}`);
+    }
+
     this.loadProfile();
 
     if (!this.birthDate) {
       this.birthDate = '2000-01-01';
     }
-  }
-
-  goHome() {
-    this.router.navigate(['/home']);
   }
 
   onDateChange(event: any) {
@@ -48,7 +54,7 @@ export class ProfilePage implements OnInit {
     return true;
   }
 
-  saveProfile() {
+  async saveProfile() {
     if (!this.validateFields()) {
       alert('Por favor, complete todos los campos antes de guardar.');
       return;
@@ -61,25 +67,24 @@ export class ProfilePage implements OnInit {
       birthDate: this.birthDate,
       hasVehicle: this.hasVehicle
     };
-    
-    localStorage.setItem('profile', JSON.stringify(profile));
+
+    await this.storage.set(`profile_${this.username}`, profile);
     alert('Perfil guardado correctamente.');
-    this.isEditing = false;  // Deshabilitar la edición después de guardar
+    this.isEditing = false;
   }
 
   enableEditing() {
-    this.isEditing = true;  // Habilitar el modo de edición
+    this.isEditing = true;
   }
 
-  loadProfile() {
-    const savedProfile = localStorage.getItem('profile');
+  async loadProfile() {
+    const savedProfile = await this.storage.get(`profile_${this.username}`);
     if (savedProfile) {
-      const profile = JSON.parse(savedProfile);
-      this.firstName = profile.firstName;
-      this.lastName = profile.lastName;
-      this.educationLevel = profile.educationLevel;
-      this.birthDate = profile.birthDate;
-      this.hasVehicle = profile.hasVehicle;
+      this.firstName = savedProfile.firstName;
+      this.lastName = savedProfile.lastName;
+      this.educationLevel = savedProfile.educationLevel;
+      this.birthDate = savedProfile.birthDate;
+      this.hasVehicle = savedProfile.hasVehicle;
     }
   }
 
@@ -96,8 +101,8 @@ export class ProfilePage implements OnInit {
     return `${day}-${month}-${year}`;
   }
 
-  clearLocalStorage() {
-    localStorage.clear();
-    alert('Memoria local vaciada.');
+  async clearStorage() {
+    await this.storage.clear();
+    alert('Memoria de almacenamiento vaciada.');
   }
 }
