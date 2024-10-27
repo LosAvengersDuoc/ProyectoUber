@@ -35,7 +35,7 @@
               [(ngModel)]="newDestination.place">
             </ion-input>
           </ion-item>
-          
+  
           <ion-item>
             <ion-icon slot="start" name="image-outline"></ion-icon>
             <ion-input
@@ -44,7 +44,7 @@
               [(ngModel)]="newDestination.image">
             </ion-input>
           </ion-item>
-          
+  
           <ion-item>
             <ion-icon slot="start" name="time-outline"></ion-icon>
             <ion-input
@@ -80,58 +80,52 @@
   
     <!-- Sugerencias de destinos -->
     <div *ngIf="!showAddDestination">
-        <h3>¡Bienvenido {{displayName}}!</h3>
-        <p>Organiza tu viaje de manera fácil y rápida.</p>
-        <ion-toolbar>
-            <ion-searchbar
-              class="buscador"
-              show-clear-button="focus"
-              animated="true"
-              placeholder="¿A dónde vas?"
-              (ionInput)="filterDestinations($event)"
-            ></ion-searchbar>
-          </ion-toolbar>
-
-        <h3>Sugerencias</h3>
-
-        
-        <ion-card *ngFor="let destination of suggestedDestinations">
-          <img
-            alt="Imagen del destino"
-            [src]="destination.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
-            class="card-image"
-          />
-          <ion-card-header>
-            <ion-card-title>
-              <ion-icon name="pin" slot="start"></ion-icon>
-              Destino: {{destination.place}}
-            </ion-card-title>
-            <ion-card-subtitle>
-              <ion-icon name="time" slot="start"></ion-icon>
-              Hora de partida: {{destination.departureTime}} hrs.
-            </ion-card-subtitle>
-          </ion-card-header>
-      
-          <ion-card-content>
-            <p>
-              <ion-icon name="information-circle" slot="start"></ion-icon>
-              {{destination.description}}<br />
-              <ion-icon name="calendar" slot="start"></ion-icon>
-              Día {{destination.departureDate}}.<br />
-            </p>
-            <ion-button expand="full" color="primary">Unirse</ion-button>
-            <ion-button expand="full" color="danger" [disabled]="true">Salir</ion-button>
-          </ion-card-content>
-        </ion-card>
-      </div>
-      
+      <h3>¡Bienvenido {{displayName}}!</h3>
+      <p>Organiza tu viaje de manera fácil y rápida.</p>
+      <ion-toolbar>
+        <ion-searchbar
+          class="buscador"
+          show-clear-button="focus"
+          animated="true"
+          placeholder="¿A dónde vas?"
+          (ionInput)="filterDestinations($event)">
+        </ion-searchbar>
+      </ion-toolbar>
+  
+      <h3>Sugerencias</h3>
+      <ion-card *ngFor="let destination of suggestedDestinations">
+        <img
+          alt="Imagen del destino"
+          [src]="destination.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
+          class="card-image"
+        />
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="pin" slot="start"></ion-icon>
+            Destino: {{destination.place}}
+          </ion-card-title>
+          <ion-card-subtitle>
+            <ion-icon name="time" slot="start"></ion-icon>
+            Hora de partida: {{destination.departureTime}} hrs.
+          </ion-card-subtitle>
+        </ion-card-header>
+  
+        <ion-card-content>
+          <p>
+            <ion-icon name="information-circle" slot="start"></ion-icon>
+            {{destination.description}}<br />
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            Día {{ formatDate(destination.departureDate) }}.<br />
+          </p>
+          <ion-button expand="full" color="primary">Unirse</ion-button>
+          <ion-button expand="full" color="danger" [disabled]="true">Salir</ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
   
     <div style="flex: 1;"></div>
   </ion-content>
   
-
-  <!-- <ion-button (click)="clearDestinations()" color="danger">Reiniciar Destinos</ion-button> -->
-
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">

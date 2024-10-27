@@ -51,7 +51,6 @@ export class HomePage implements OnInit {
         this.loadProfile();
         });
 
-        // Cargar destinos desde storage
         this.loadDestinations();
     }
 
@@ -137,9 +136,14 @@ export class HomePage implements OnInit {
     }
     
     async clearDestinations() {
-        await this.storage.remove('destinations'); // Elimina destinos del storage
-        this.destinations = []; // Vacía el array local
-        this.suggestedDestinations = []; // Vacía las sugerencias
-    }
+        await this.storage.remove('destinations');
+        this.destinations = [];
+        this.suggestedDestinations = [];
+    }   
     
+    formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('es-ES', options);
+      }
 }
