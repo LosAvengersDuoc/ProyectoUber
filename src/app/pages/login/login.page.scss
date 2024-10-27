@@ -1,0 +1,44 @@
+.login-content {
+    --background: linear-gradient(to bottom, #fff 20%, #a1c4fd 100%);
+  }
+  
+  .login-card {
+    max-width: 420px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+  
+  .login-form {
+    padding-top: 1rem;
+    text-align: center;
+  }
+  
+  .input-item {
+    --background: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: black;
+    margin-top: 0.5rem;
+  }
+  
+  .login-button {
+    margin-top: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+  }
+  
+  .error-message {
+    margin-top: 1rem;
+    text-align: center;
+    --color: #ff4d4d;
+    --background: rgba(255, 77, 77, 0.1);
+  }
+  
+  .forgot-password {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: black;
+    text-decoration: underline;
+  }
+  
