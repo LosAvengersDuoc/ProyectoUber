@@ -18,7 +18,7 @@ export class LoginPage {
     { username: 'admin3', password: '1234' },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   validateLogin() {
     const usernameRegex = /^[A-Za-z0-9]{3,8}$/;
