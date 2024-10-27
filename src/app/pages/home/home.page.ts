@@ -56,8 +56,4 @@ export class HomePage implements OnInit {
   logout() {
     this.router.navigate(['/login']);
   }
-
-  goToResetPassword() {
-    this.router.navigate(['/reset-password']);
-  }
 }
