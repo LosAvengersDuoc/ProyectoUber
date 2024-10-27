@@ -47,21 +47,24 @@
   
           <ion-item>
             <ion-icon slot="start" name="time-outline"></ion-icon>
-            <ion-input
+            <ion-datetime
+              displayFormat="HH:mm"
               label="Hora de partida"
-              labelPlacement="stacked"
-              [(ngModel)]="newDestination.departureTime">
-            </ion-input>
+              [(ngModel)]="newDestination.departureTime"
+              [disabled]="false"
+              locale="es-ES">
+            </ion-datetime>
           </ion-item>
   
           <ion-item>
             <ion-icon slot="start" name="calendar-outline"></ion-icon>
-            <ion-input
-              type="date"
+            <ion-datetime
+              displayFormat="DD [de] MMMM, YYYY"
               label="Fecha de partida"
-              labelPlacement="stacked"
-              [(ngModel)]="newDestination.departureDate">
-            </ion-input>
+              [(ngModel)]="newDestination.departureDate"
+              [disabled]="false"
+              locale="es-ES">
+            </ion-datetime>
           </ion-item>
   
           <ion-item>
