@@ -18,117 +18,116 @@
   </ion-header>
   
   <ion-content [fullscreen]="true" class="ion-padding">
-    <!-- Formulario para agregar destino -->
-    <div *ngIf="showAddDestination" class="add-destination-form">
-      <h3>Añadir un Nuevo Destino</h3>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Completa la información del destino</ion-card-title>
-        </ion-card-header>
-  
-        <ion-card-content>
-          <ion-item>
-            <ion-icon slot="start" name="pin-outline"></ion-icon>
-            <ion-input
-              label="Lugar de destino"
-              labelPlacement="stacked"
-              [(ngModel)]="newDestination.place">
-            </ion-input>
-          </ion-item>
-  
-          <ion-item>
-            <ion-icon slot="start" name="image-outline"></ion-icon>
-            <ion-input
-              label="Link de imagen (opcional)"
-              labelPlacement="stacked"
-              [(ngModel)]="newDestination.image">
-            </ion-input>
-          </ion-item>
-  
-          <ion-item>
-            <ion-icon slot="start" name="time-outline"></ion-icon>
-            <ion-datetime
-              displayFormat="HH:mm"
-              label="Hora de partida"
-              [(ngModel)]="newDestination.departureTime"
-              [disabled]="false"
-              locale="es-ES">
-            </ion-datetime>
-          </ion-item>
-  
-          <ion-item>
-            <ion-icon slot="start" name="calendar-outline"></ion-icon>
-            <ion-datetime
-              displayFormat="DD [de] MMMM, YYYY"
-              label="Fecha de partida"
-              [(ngModel)]="newDestination.departureDate"
-              [disabled]="false"
-              locale="es-ES">
-            </ion-datetime>
-          </ion-item>
-  
-          <ion-item>
-            <ion-icon slot="start" name="document-text-outline"></ion-icon>
-            <ion-textarea
-              label="Descripción"
-              labelPlacement="stacked"
-              [(ngModel)]="newDestination.description">
-            </ion-textarea>
-          </ion-item>
-  
-          <ion-button expand="full" (click)="addDestination()">Guardar Destino</ion-button>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  
-    <!-- Sugerencias de destinos -->
     <div *ngIf="!showAddDestination">
-      <h3>¡Bienvenido {{displayName}}!</h3>
-      <p>Organiza tu viaje de manera fácil y rápida.</p>
-      <ion-toolbar>
-        <ion-searchbar
-          class="buscador"
-          show-clear-button="focus"
-          animated="true"
-          placeholder="¿A dónde vas?"
-          (ionInput)="filterDestinations($event)">
-        </ion-searchbar>
-      </ion-toolbar>
-  
-      <h3>Sugerencias</h3>
-      <ion-card *ngFor="let destination of suggestedDestinations">
-        <img
-          alt="Imagen del destino"
-          [src]="destination.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
-          class="card-image"
-        />
-        <ion-card-header>
-          <ion-card-title>
-            <ion-icon name="pin" slot="start"></ion-icon>
-            Destino: {{destination.place}}
-          </ion-card-title>
-          <ion-card-subtitle>
-            <ion-icon name="time" slot="start"></ion-icon>
-            Hora de partida: {{destination.departureTime}} hrs.
-          </ion-card-subtitle>
-        </ion-card-header>
-  
-        <ion-card-content>
-          <p>
-            <ion-icon name="information-circle" slot="start"></ion-icon>
-            {{destination.description}}<br />
-            <ion-icon name="calendar" slot="start"></ion-icon>
-            Día {{ formatDate(destination.departureDate) }}.<br />
-          </p>
-          <ion-button expand="full" color="primary">Unirse</ion-button>
-          <ion-button expand="full" color="danger" [disabled]="true">Salir</ion-button>
-        </ion-card-content>
-      </ion-card>
-    </div>
+        <h3>¡Bienvenido {{displayName}}!</h3>
+        <p>Organiza tu viaje de manera fácil y rápida.</p>
+        <ion-toolbar>
+            <ion-searchbar
+              class="buscador"
+              show-clear-button="focus"
+              animated="true"
+              placeholder="¿A dónde vas?"
+              (ionInput)="filterDestinations($event)"
+            ></ion-searchbar>
+          </ion-toolbar>
+
+        <h3>Sugerencias</h3>
+    
+        <ion-card *ngFor="let destination of suggestedDestinations">
+          <img
+            alt="Imagen del destino"
+            [src]="destination.image || 'https://ionicframework.com/docs/img/demos/card-media.png'"
+            class="card-image"
+          />
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="pin" slot="start"></ion-icon>
+              Destino: {{destination.place}}
+            </ion-card-title>
+            <ion-card-subtitle>
+              <ion-icon name="time" slot="start"></ion-icon>
+              Hora de partida: {{destination.departureTime}} hrs.
+            </ion-card-subtitle>
+          </ion-card-header>
+      
+          <ion-card-content>
+            <p>
+              <ion-icon name="information-circle" slot="start"></ion-icon>
+              {{destination.description}}<br />
+              <ion-icon name="calendar" slot="start"></ion-icon>
+              Día {{destination.departureDate}}.<br />
+            </p>
+            <ion-button expand="full" color="primary">Unirse</ion-button>
+            <ion-button expand="full" color="danger" [disabled]="true">Salir</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <div *ngIf="showAddDestination" class="add-destination-form">
+        <h3>Añadir un Nuevo Destino</h3>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Completa la información del destino</ion-card-title>
+          </ion-card-header>
+    
+          <ion-card-content>
+            <ion-item>
+              <ion-icon slot="start" name="pin-outline"></ion-icon>
+              <ion-input
+                label="Lugar de destino"
+                labelPlacement="stacked"
+                [(ngModel)]="newDestination.place">
+              </ion-input>
+            </ion-item>
+            
+            <ion-item>
+              <ion-icon slot="start" name="image-outline"></ion-icon>
+              <ion-input
+                label="Link de imagen (opcional)"
+                labelPlacement="stacked"
+                [(ngModel)]="newDestination.image">
+              </ion-input>
+            </ion-item>
+            
+            <ion-item>
+              <ion-icon slot="start" name="time-outline"></ion-icon>
+              <ion-input
+                label="Hora de partida"
+                labelPlacement="stacked"
+                [(ngModel)]="newDestination.departureTime">
+              </ion-input>
+            </ion-item>
+    
+            <ion-item>
+              <ion-icon slot="start" name="calendar-outline"></ion-icon>
+              <ion-input
+                type="date"
+                label="Fecha de partida"
+                labelPlacement="stacked"
+                [(ngModel)]="newDestination.departureDate">
+              </ion-input>
+            </ion-item>
+    
+            <ion-item>
+              <ion-icon slot="start" name="document-text-outline"></ion-icon>
+              <ion-textarea
+                label="Descripción"
+                labelPlacement="stacked"
+                [(ngModel)]="newDestination.description">
+              </ion-textarea>
+            </ion-item>
+    
+            <ion-button expand="full" (click)="addDestination()">Guardar Destino</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
   
     <div style="flex: 1;"></div>
   </ion-content>
   
+
+  <!-- <ion-button (click)="clearDestinations()" color="danger">Reiniciar Destinos</ion-button> -->
+
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
