@@ -42,28 +42,33 @@ export class HomePage implements OnInit {
 
     async ngOnInit() {
         this.activatedRoute.queryParams.subscribe(params => {
-        const navigation = this.router.getCurrentNavigation();
-        const state = navigation?.extras.state as { user?: string };
-        if (state && state.user) {
-            localStorage.setItem('username', state.user);
-        }
-
-        this.loadProfile();
+            const navigation = this.router.getCurrentNavigation();
+            const state = navigation?.extras.state as { user?: string };
+            if (state && state.user) {
+                this.username = state.user; // Actualiza username si hay un nuevo usuario
+                localStorage.setItem('username', this.username);
+            } else {
+                this.username = localStorage.getItem('username') || '';
+            }
+    
+            this.loadProfile(); // Carga el perfil basado en el username actualizado
         });
-
-        // Cargar destinos desde storage
+    
         this.loadDestinations();
-    }
-
+    }    
+    
     async loadProfile() {
         const savedProfile = await this.storage.get(`profile_${this.username}`);
         if (savedProfile) {
-        this.displayName = `${savedProfile.firstName} ${savedProfile.lastName}`;
-        this.hasVehicle = savedProfile.hasVehicle;
-
-        this.showCreateTrip = this.hasVehicle;
+            this.displayName = `${savedProfile.firstName} ${savedProfile.lastName}`;
+            this.hasVehicle = savedProfile.hasVehicle;
+            this.showCreateTrip = this.hasVehicle;
+        } else {
+            this.displayName = '';
         }
     }
+    
+    
 
     async loadDestinations() {
         this.destinations = await this.storage.get('destinations') || [];
@@ -92,8 +97,11 @@ export class HomePage implements OnInit {
     }
 
     logout() {
+        this.displayName = '';
         this.router.navigate(['/login']);
     }
+    
+    
 
     goToResetPassword() {
         this.router.navigate(['/reset-password']);
@@ -137,9 +145,16 @@ export class HomePage implements OnInit {
     }
     
     async clearDestinations() {
-        await this.storage.remove('destinations'); // Elimina destinos del storage
-        this.destinations = []; // Vacía el array local
-        this.suggestedDestinations = []; // Vacía las sugerencias
-    }
+        await this.storage.remove('destinations');
+        this.destinations = [];
+        this.suggestedDestinations = [];
+    }   
     
+    formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('es-ES', options);
+      }
+
+      
 }

@@ -38,6 +38,9 @@ export class LoginPage {
       let extras: NavigationExtras = {
         state: { user: this.username }
       };
+
+      localStorage.setItem('username', this.username);
+      
       this.router.navigate(['/home'], extras);
     } else {
       this.message = 'Login con error';
