@@ -1,5 +1,20 @@
-import { CanActivateFn } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 
-export const noAuthGuard: CanActivateFn = (route, state) => {
-  return false;
-};
+@Injectable({
+  providedIn: 'root',
+})
+export class NoAuthGuard implements CanActivate {
+  constructor(private readonly router: Router) {}
+
+  canActivate(): boolean {
+    console.log('Executing NoAuthGuard!');
+    const user = localStorage.getItem('username');
+    if (user) {
+      console.log('User is already authenticated, redirecting to Home!');
+      this.router.navigate(['/home']);
+      return false;
+    }
+    return true;
+  }
+}
