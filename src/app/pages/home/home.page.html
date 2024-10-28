@@ -52,23 +52,25 @@
 </ion-content>
 
 <!-- Barra de navegación inferior -->
-<ion-tabs>
+<ion-toolbar>
+  <ion-tabs>
     <ion-tab-bar slot="bottom">
-      <ion-tab-button routerLink="/home" routerDirection="root">
+      <ion-tab-button tab="home" routerLink="/home">
         <ion-icon name="home"></ion-icon>
         Inicio
       </ion-tab-button>
-      <ion-tab-button routerLink="/services" routerDirection="root">
+      <ion-tab-button tab="apps">
         <ion-icon name="apps"></ion-icon>
         Servicios
       </ion-tab-button>
-      <ion-tab-button routerLink="/activity" routerDirection="root">
+      <ion-tab-button tab="reader">
         <ion-icon name="reader"></ion-icon>
         Actividad
       </ion-tab-button>
-      <ion-tab-button routerLink="/profile" routerDirection="root">
+      <ion-tab-button tab="person" routerLink="/profile">
         <ion-icon name="person"></ion-icon>
         Perfil
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>
+</ion-toolbar>
