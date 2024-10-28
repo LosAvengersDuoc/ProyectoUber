@@ -175,6 +175,7 @@ export class HomePage implements OnInit, AfterViewInit {
   // Cerrar sesión
   logout() {
     this.displayName = '';
+    localStorage.removeItem('username');
     this.router.navigate(['/login']);
   }
 }
