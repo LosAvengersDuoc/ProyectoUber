@@ -1,28 +1,20 @@
-import { CanActivate, CanActivateFn, Router } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { LoginService } from '../services/login.service';
-
-
-export const noAuthGuard: CanActivateFn = (route, state) => {
-  return false;
-};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class NoAuthenticationGuard implements CanActivate {
-  constructor(
-      private readonly router: Router,
-      private readonly loginService: LoginService
-  ){ }
-  async canActivate() {
+export class NoAuthGuard implements CanActivate {
+  constructor(private readonly router: Router) {}
 
-    console.log('Ejecutando no-guard!')
-    const auth = await this.loginService.isAuthenticated();
-    if (auth) {
-        console.log('Usuario autenticado, redireccionando a Home!')
-        await this.router.navigate(['/home']);
+  canActivate(): boolean {
+    console.log('Executing NoAuthGuard!');
+    const user = localStorage.getItem('username');
+    if (user) {
+      console.log('User is already authenticated, redirecting to Home!');
+      this.router.navigate(['/home']);
+      return false;
     }
-    return !auth;
+    return true;
   }
 }
