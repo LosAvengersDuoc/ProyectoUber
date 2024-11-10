@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { IonDatetime } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonDatetime, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
@@ -17,57 +17,107 @@ export class ProfilePage implements OnInit {
   birthDate: string = '';
   hasVehicle: boolean = false;
   username: string = '';
-  
   isEditing: boolean = false;
-  originalProfile: any = {};
 
-  constructor(private router: Router, private storage: Storage) {
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    private alertController: AlertController // Importamos AlertController
+  ) {
     this.storage.create();
   }
 
   async ngOnInit() {
     this.username = localStorage.getItem('username') || "";
+
+    if(this.username.length >= 1) {
+        console.log(`Cargando perfil para el usuario: ${this.username}`);
+    }
+
     this.loadProfile();
-    if (!this.birthDate) this.birthDate = '2000-01-01';
+
+    if (!this.birthDate) {
+      this.birthDate = '2000-01-01';
+    }
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any): void {
-    if (this.isEditing) {
-      $event.returnValue = true;
+  onDateChange(event: any) {
+    const selectedDate = new Date(event.detail.value);
+    if (!isNaN(selectedDate.getTime())) {
+      this.birthDate = selectedDate.toISOString().split('T')[0];
+    } else {
+      this.showAlert('Fecha no válida', 'La fecha seleccionada no es válida.');
     }
+  }
+
+  validateFields(): boolean {
+    return !!(this.firstName && this.lastName && this.educationLevel && this.birthDate);
+  }
+
+  async showValidationAlert() {
+    const alert = await this.alertController.create({
+      header: 'Campos incompletos',
+      message: 'Por favor, complete todos los campos antes de guardar.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async confirmSaveProfile() {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de que deseas guardar los cambios?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: () => this.saveProfileData(),
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   async saveProfile() {
     if (!this.validateFields()) {
-      alert('Por favor, complete todos los campos antes de guardar.');
+      await this.showValidationAlert();
       return;
     }
-
-    if (confirm('¿Está seguro de que desea guardar los cambios?')) {
-      const profile = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        educationLevel: this.educationLevel,
-        birthDate: this.birthDate,
-        hasVehicle: this.hasVehicle
-      };
-      await this.storage.set(`profile_${this.username}`, profile);
-      alert('Perfil guardado correctamente.');
-      this.isEditing = false;
-      this.originalProfile = { ...profile };
-    }
+    // Llamamos a la confirmación antes de guardar los cambios
+    await this.confirmSaveProfile();
   }
 
-  enableEditing() {
-    this.isEditing = true;
-    this.originalProfile = {
+  async saveProfileData() {
+    const profile = {
       firstName: this.firstName,
       lastName: this.lastName,
       educationLevel: this.educationLevel,
       birthDate: this.birthDate,
       hasVehicle: this.hasVehicle
     };
+
+    await this.storage.set(`profile_${this.username}`, profile);
+    this.showAlert('Perfil guardado', 'Perfil guardado correctamente.');
+    this.isEditing = false;
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  enableEditing() {
+    this.isEditing = true;
   }
 
   async loadProfile() {
@@ -78,27 +128,24 @@ export class ProfilePage implements OnInit {
       this.educationLevel = savedProfile.educationLevel;
       this.birthDate = savedProfile.birthDate;
       this.hasVehicle = savedProfile.hasVehicle;
-      this.originalProfile = { ...savedProfile };
     }
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  canDeactivate($event: Event) {
-    if (this.isEditing && !this.profileUnchanged()) {
-      const confirmation = confirm('Hay cambios sin guardar. ¿Desea salir sin guardar?');
-      if (!confirmation) $event.preventDefault();
-    }
+  getFormattedBirthDate(): string {
+    if (!this.birthDate) return '';
+
+    const date = new Date(this.birthDate);
+    if (isNaN(date.getTime())) return '';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
   }
 
-  profileUnchanged(): boolean {
-    return this.firstName === this.originalProfile.firstName &&
-           this.lastName === this.originalProfile.lastName &&
-           this.educationLevel === this.originalProfile.educationLevel &&
-           this.birthDate === this.originalProfile.birthDate &&
-           this.hasVehicle === this.originalProfile.hasVehicle;
+  async clearStorage() {
+    await this.storage.clear();
+    this.showAlert('Almacenamiento borrado', 'Memoria de almacenamiento vaciada.');
   }
-
-  validateFields(): boolean {
-    return !!(this.firstName && this.lastName && this.educationLevel && this.birthDate);
-  }  
 }
