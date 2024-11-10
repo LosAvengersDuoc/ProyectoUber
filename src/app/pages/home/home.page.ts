@@ -173,9 +173,28 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   // Cerrar sesión
-  logout() {
-    this.displayName = '';
-    localStorage.removeItem('username');
-    this.router.navigate(['/login']);
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar cierre de sesión',
+      message: '¿Estás seguro de que deseas cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            // Lógica de cierre de sesión
+            this.displayName = '';
+            localStorage.removeItem('username');
+            this.router.navigate(['/login']);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

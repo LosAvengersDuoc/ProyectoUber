@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { IonDatetime } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -17,8 +17,9 @@ export class ProfilePage implements OnInit {
   birthDate: string = '';
   hasVehicle: boolean = false;
   username: string = '';
-
+  
   isEditing: boolean = false;
+  originalProfile: any = {};
 
   constructor(private router: Router, private storage: Storage) {
     this.storage.create();
@@ -26,32 +27,15 @@ export class ProfilePage implements OnInit {
 
   async ngOnInit() {
     this.username = localStorage.getItem('username') || "";
-
-    if(this.username.length >= 1) {
-        console.log(`Cargando perfil para el usuario: ${this.username}`);
-    }
-
     this.loadProfile();
-
-    if (!this.birthDate) {
-      this.birthDate = '2000-01-01';
-    }
+    if (!this.birthDate) this.birthDate = '2000-01-01';
   }
 
-  onDateChange(event: any) {
-    const selectedDate = new Date(event.detail.value);
-    if (!isNaN(selectedDate.getTime())) {
-      this.birthDate = selectedDate.toISOString().split('T')[0];
-    } else {
-      alert('Fecha seleccionada no es válida.');
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    if (this.isEditing) {
+      $event.returnValue = true;
     }
-  }
-
-  validateFields(): boolean {
-    if (!this.firstName || !this.lastName || !this.educationLevel || !this.birthDate) {
-      return false;
-    }
-    return true;
   }
 
   async saveProfile() {
@@ -60,21 +44,30 @@ export class ProfilePage implements OnInit {
       return;
     }
 
-    const profile = {
+    if (confirm('¿Está seguro de que desea guardar los cambios?')) {
+      const profile = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        educationLevel: this.educationLevel,
+        birthDate: this.birthDate,
+        hasVehicle: this.hasVehicle
+      };
+      await this.storage.set(`profile_${this.username}`, profile);
+      alert('Perfil guardado correctamente.');
+      this.isEditing = false;
+      this.originalProfile = { ...profile };
+    }
+  }
+
+  enableEditing() {
+    this.isEditing = true;
+    this.originalProfile = {
       firstName: this.firstName,
       lastName: this.lastName,
       educationLevel: this.educationLevel,
       birthDate: this.birthDate,
       hasVehicle: this.hasVehicle
     };
-
-    await this.storage.set(`profile_${this.username}`, profile);
-    alert('Perfil guardado correctamente.');
-    this.isEditing = false;
-  }
-
-  enableEditing() {
-    this.isEditing = true;
   }
 
   async loadProfile() {
@@ -85,24 +78,27 @@ export class ProfilePage implements OnInit {
       this.educationLevel = savedProfile.educationLevel;
       this.birthDate = savedProfile.birthDate;
       this.hasVehicle = savedProfile.hasVehicle;
+      this.originalProfile = { ...savedProfile };
     }
   }
 
-  getFormattedBirthDate(): string {
-    if (!this.birthDate) return '';
-
-    const date = new Date(this.birthDate);
-    if (isNaN(date.getTime())) return '';
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
+  @HostListener('window:beforeunload', ['$event'])
+  canDeactivate($event: Event) {
+    if (this.isEditing && !this.profileUnchanged()) {
+      const confirmation = confirm('Hay cambios sin guardar. ¿Desea salir sin guardar?');
+      if (!confirmation) $event.preventDefault();
+    }
   }
 
-  async clearStorage() {
-    await this.storage.clear();
-    alert('Memoria de almacenamiento vaciada.');
+  profileUnchanged(): boolean {
+    return this.firstName === this.originalProfile.firstName &&
+           this.lastName === this.originalProfile.lastName &&
+           this.educationLevel === this.originalProfile.educationLevel &&
+           this.birthDate === this.originalProfile.birthDate &&
+           this.hasVehicle === this.originalProfile.hasVehicle;
   }
+
+  validateFields(): boolean {
+    return !!(this.firstName && this.lastName && this.educationLevel && this.birthDate);
+  }  
 }
