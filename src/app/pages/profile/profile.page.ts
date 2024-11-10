@@ -22,7 +22,7 @@ export class ProfilePage implements OnInit {
   constructor(
     private router: Router,
     private storage: Storage,
-    private alertController: AlertController // Importamos AlertController
+    private alertController: AlertController
   ) {
     this.storage.create();
   }
@@ -88,7 +88,6 @@ export class ProfilePage implements OnInit {
       await this.showValidationAlert();
       return;
     }
-    // Llamamos a la confirmación antes de guardar los cambios
     await this.confirmSaveProfile();
   }
 

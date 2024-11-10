@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
+import { Storage } from '@ionic/storage-angular'; // Asegúrate de importar Storage
 
 @Component({
   selector: 'app-login',
@@ -18,9 +19,9 @@ export class LoginPage {
     { username: 'admin3', password: '1234' },
   ];
 
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router, private storage: Storage) {}
 
-  validateLogin() {
+  async validateLogin() {
     const usernameRegex = /^[A-Za-z0-9]{3,8}$/;
     if (!usernameRegex.test(this.username)) {
       this.message = 'El nombre de usuario debe tener entre 3 y 8 caracteres alfanuméricos.';
@@ -35,15 +36,23 @@ export class LoginPage {
 
     const user = this.users.find(u => u.username === this.username && u.password === this.password);
     if (user) {
-      let extras: NavigationExtras = {
-        state: { user: this.username }
-      };
+            await this.storage.create();
+            
+        localStorage.setItem('username', this.username);
 
-      localStorage.setItem('username', this.username);
-      
-      this.router.navigate(['/home'], extras);
+        const profile = await this.storage.get(`profile_${this.username}`);
+        
+        if (profile) {
+            localStorage.setItem('displayName', `${profile.firstName} ${profile.lastName}`);
+        }
+
+        let extras: NavigationExtras = {
+            state: { user: this.username }
+        };
+
+        this.router.navigate(['/home'], extras);
     } else {
-      this.message = 'Login con error';
+        this.message = 'Login con error';
     }
 
     console.log('Username:', this.username);
