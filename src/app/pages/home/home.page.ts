@@ -152,13 +152,6 @@ export class HomePage implements OnInit, AfterViewInit {
     await alert.present();
   }
 
-<<<<<<< HEAD
-  // Función para cerrar sesión
-  logout() {
-    this.displayName = '';
-    localStorage.removeItem('username');
-    this.router.navigate(['/login']);
-=======
   // Mostrar formulario para añadir destino
   goToAddDestination() {
     this.showCreateTrip = true;
@@ -188,7 +181,6 @@ export class HomePage implements OnInit, AfterViewInit {
     });
 
     await alert.present();
->>>>>>> c4eaeb62a0a57766d6508c37e4ffd158d74dd58a
   }
 
   // Función para buscar ubicación
