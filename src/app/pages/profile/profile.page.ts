@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonDatetime } from '@ionic/angular';
+import { IonDatetime, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
@@ -17,10 +17,13 @@ export class ProfilePage implements OnInit {
   birthDate: string = '';
   hasVehicle: boolean = false;
   username: string = '';
-
   isEditing: boolean = false;
 
-  constructor(private router: Router, private storage: Storage) {
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    private alertController: AlertController
+  ) {
     this.storage.create();
   }
 
@@ -43,23 +46,52 @@ export class ProfilePage implements OnInit {
     if (!isNaN(selectedDate.getTime())) {
       this.birthDate = selectedDate.toISOString().split('T')[0];
     } else {
-      alert('Fecha seleccionada no es válida.');
+      this.showAlert('Fecha no válida', 'La fecha seleccionada no es válida.');
     }
   }
 
   validateFields(): boolean {
-    if (!this.firstName || !this.lastName || !this.educationLevel || !this.birthDate) {
-      return false;
-    }
-    return true;
+    return !!(this.firstName && this.lastName && this.educationLevel && this.birthDate);
+  }
+
+  async showValidationAlert() {
+    const alert = await this.alertController.create({
+      header: 'Campos incompletos',
+      message: 'Por favor, complete todos los campos antes de guardar.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async confirmSaveProfile() {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de que deseas guardar los cambios?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: () => this.saveProfileData(),
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   async saveProfile() {
     if (!this.validateFields()) {
-      alert('Por favor, complete todos los campos antes de guardar.');
+      await this.showValidationAlert();
       return;
     }
+    await this.confirmSaveProfile();
+  }
 
+  async saveProfileData() {
     const profile = {
       firstName: this.firstName,
       lastName: this.lastName,
@@ -69,8 +101,18 @@ export class ProfilePage implements OnInit {
     };
 
     await this.storage.set(`profile_${this.username}`, profile);
-    alert('Perfil guardado correctamente.');
+    this.showAlert('Perfil guardado', 'Perfil guardado correctamente.');
     this.isEditing = false;
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
   enableEditing() {
@@ -103,6 +145,6 @@ export class ProfilePage implements OnInit {
 
   async clearStorage() {
     await this.storage.clear();
-    alert('Memoria de almacenamiento vaciada.');
+    this.showAlert('Almacenamiento borrado', 'Memoria de almacenamiento vaciada.');
   }
 }
