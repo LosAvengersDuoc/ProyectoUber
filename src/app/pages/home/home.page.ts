@@ -17,11 +17,13 @@ export class HomePage implements OnInit, AfterViewInit {
   destinationMarker: any;
   displayName: string = '';
   originQuery: string = '';
-  destinationQuery: string = '';
   distanceInfo: string = '';
   showCreateTrip: boolean = true;
   suggestedDestinations: any[] = [];
   filteredSuggestions: any[] = [];
+
+  // Coordenadas del Duoc UC San Joaquín como destino fijo
+  private readonly duocUcSanJoaquin = { lat: -33.502916, lon: -70.613207 };
 
   constructor(
     private router: Router,
@@ -44,52 +46,26 @@ export class HomePage implements OnInit, AfterViewInit {
     }).addTo(this.map);
     this.markerLayer = L.layerGroup().addTo(this.map);
     this.routeLayer = L.layerGroup().addTo(this.map);
-  }
 
-  private async searchLocation(query: string, isDestination: boolean) {
-    if (!query) return null;
-    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(query)}`;
-    const response = await fetch(geocodeService);
-    const data = await response.json();
-    
-    if (data && data.length > 0) {
-      const location = data[0];
-      const lat = parseFloat(location.lat);
-      const lon = parseFloat(location.lon);
-      const markerIcon = L.icon({
-        iconUrl: isDestination
-          ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
-          : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      });
-      
-      if (isDestination) {
-        if (this.destinationMarker) this.markerLayer.removeLayer(this.destinationMarker);
-        this.destinationMarker = L.marker([lat, lon], { icon: markerIcon })
-          .bindPopup(`Destino: ${query}`)
-          .openPopup();
-        this.markerLayer.addLayer(this.destinationMarker);
-      } else {
-        if (this.originMarker) this.markerLayer.removeLayer(this.originMarker);
-        this.originMarker = L.marker([lat, lon], { icon: markerIcon })
-          .bindPopup(`Origen: ${query}`)
-          .openPopup();
-        this.markerLayer.addLayer(this.originMarker);
-      }
-      this.map.setView([lat, lon], 14);
+    // Agregar el marcador de destino fijo al inicializar el mapa
+    const destinationIcon = L.icon({
+      iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
 
-      return { lat, lon };
-    } else {
-      alert('No se encontró la ubicación.');
-      return null;
-    }
+    this.destinationMarker = L.marker([this.duocUcSanJoaquin.lat, this.duocUcSanJoaquin.lon], {
+      icon: destinationIcon
+    })
+      .bindPopup('Destino: Duoc UC San Joaquín')
+      .openPopup();
+    this.markerLayer.addLayer(this.destinationMarker);
   }
 
   async traceRoute() {
     const origin = await this.searchLocation(this.originQuery, false);
-    const destination = await this.searchLocation(this.destinationQuery, true);
+    const destination = this.duocUcSanJoaquin;
 
     if (origin && destination) {
       const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${destination.lon},${destination.lat}?overview=full&geometries=geojson`;
@@ -119,29 +95,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
   }
 
-  // Función para mostrar el mensaje emergente con solo el nombre de origen y destino
-  async shareLocation() {
-    const alert = await this.alertController.create({
-      header: 'Ubicación Compartida',
-      message: `
-        <div style="text-align: left;">
-          <p><strong>Origen:</strong> ${this.originQuery || 'No especificado'}</p>
-          <p><strong>Destino:</strong> ${this.destinationQuery || 'No especificado'}</p>
-        </div>
-      `,
-      buttons: [
-        {
-          text: 'Cerrar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  // Cargar sugerencias de destinos
+  // Función para cargar sugerencias de destinos
   private loadSuggestedDestinations() {
     this.suggestedDestinations = [
       { place: 'Parque Arauco', description: 'Centro comercial' },
@@ -162,20 +116,74 @@ export class HomePage implements OnInit, AfterViewInit {
     }
   }
 
-  // Navegar a la sección de viajes
-  goToTravels() {
-    this.showCreateTrip = false;
+  // Función para compartir la ubicación
+  async shareLocation() {
+    const alert = await this.alertController.create({
+      header: 'Ubicación Compartida',
+      message: `
+        <div style="text-align: left;">
+          <p><strong>Origen:</strong> ${this.originQuery || 'No especificado'}</p>
+          <p><strong>Destino:</strong> Duoc UC San Joaquín</p>
+        </div>
+      `,
+      buttons: [
+        {
+          text: 'Cerrar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
-  // Mostrar formulario para añadir destino
-  goToAddDestination() {
-    this.showCreateTrip = true;
-  }
-
-  // Cerrar sesión
+  // Función para cerrar sesión
   logout() {
     this.displayName = '';
     localStorage.removeItem('username');
     this.router.navigate(['/login']);
+  }
+
+  // Función para buscar ubicación
+  private async searchLocation(query: string, isDestination: boolean) {
+    if (!query) return null;
+    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(query)}`;
+    const response = await fetch(geocodeService);
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      const location = data[0];
+      const lat = parseFloat(location.lat);
+      const lon = parseFloat(location.lon);
+      const markerIcon = L.icon({
+        iconUrl: isDestination
+          ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+      
+      if (isDestination) {
+        if (this.destinationMarker) this.markerLayer.removeLayer(this.destinationMarker);
+        this.destinationMarker = L.marker([lat, lon], { icon: markerIcon })
+          .bindPopup(`Destino: Duoc UC San Joaquín`)
+          .openPopup();
+        this.markerLayer.addLayer(this.destinationMarker);
+      } else {
+        if (this.originMarker) this.markerLayer.removeLayer(this.originMarker);
+        this.originMarker = L.marker([lat, lon], { icon: markerIcon })
+          .bindPopup(`Origen: ${query}`)
+          .openPopup();
+        this.markerLayer.addLayer(this.originMarker);
+      }
+      this.map.setView([lat, lon], 14);
+
+      return { lat, lon };
+    } else {
+      alert('No se encontró la ubicación.');
+      return null;
+    }
   }
 }
