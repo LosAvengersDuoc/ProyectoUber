@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as L from 'leaflet';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ export class HomePage implements OnInit, AfterViewInit {
   routeLayer!: L.LayerGroup;
   originMarker: any;
   destinationMarker: any;
-  displayName: string = '';
+  displayName: string = localStorage.getItem('displayName') || '';  // Aquí se almacenará el nombre del usuario
   originQuery: string = '';
   destinationQuery: string = '';
   distanceInfo: string = '';
@@ -25,11 +26,24 @@ export class HomePage implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private storage: Storage
   ) {}
 
   async ngOnInit() {
+    await this.storage.create();
+    this.loadUserName();
     this.loadSuggestedDestinations();
+  }
+
+  private async loadUserName() {
+    const username = localStorage.getItem('username'); // Obtener el username del localStorage
+    if (username) {
+      const profile = await this.storage.get(`profile_${username}`);  // Obtener el perfil del Storage
+      if (profile) {
+        this.displayName = `${profile.firstName} ${profile.lastName}`;  // Asignar el nombre completo
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -173,9 +187,28 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   // Cerrar sesión
-  logout() {
-    this.displayName = '';
-    localStorage.removeItem('username');
-    this.router.navigate(['/login']);
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar cierre de sesión',
+      message: '¿Estás seguro de que deseas cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            // Lógica de cierre de sesión
+            this.displayName = '';
+            localStorage.removeItem('username');
+            this.router.navigate(['/login']);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
