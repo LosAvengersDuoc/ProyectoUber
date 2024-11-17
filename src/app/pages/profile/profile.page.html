@@ -1,10 +1,10 @@
 <ion-header [translucent]="true">
-    <ion-toolbar>
+    <ion-toolbar class="perfil">
         <ion-title>Perfil</ion-title>
     </ion-toolbar>
 </ion-header>
   
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="profile-content">
     <ion-card>
         <ion-card-header>
             <ion-card-title>Información del Perfil</ion-card-title>
@@ -53,8 +53,8 @@
             </ion-item>
             
             <br>
-            <ion-button expand="block" *ngIf="!isEditing" (click)="enableEditing()">Modificar Perfil</ion-button>
-            <ion-button expand="block" *ngIf="isEditing" (click)="saveProfile()">Guardar Cambios</ion-button>
+            <ion-button class="mod-button" expand="block" *ngIf="!isEditing" (click)="enableEditing()">Modificar Perfil</ion-button>
+            <ion-button class="guardar-button" expand="block" *ngIf="isEditing" (click)="saveProfile()">Guardar Cambios</ion-button>
         </ion-card-content>
     </ion-card>
 </ion-content>
