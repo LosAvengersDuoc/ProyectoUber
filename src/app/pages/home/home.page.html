@@ -7,13 +7,13 @@
     </ion-segment>
 
     <ion-buttons slot="end">
-      <ion-button (click)="logout()">
+      <ion-button id="close-loading" (click)="logout()">
         <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+<ion-loading class="custom-loading" trigger="close-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="welcome-section">
     <h3>¡Bienvenido {{displayName}}!</h3>

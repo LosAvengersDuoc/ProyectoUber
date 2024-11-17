@@ -54,10 +54,11 @@
             </ion-item>
           </ion-list>
   
-          <ion-button expand="block" (click)="validateLogin()" color="dark" class="login-button">
+          <ion-button id="open-loading" expand="block" (click)="validateLogin()" color="dark" class="login-button">
             <ion-icon slot="start" name="log-in-outline"></ion-icon>
             Ingresa
           </ion-button>
+          <ion-loading class="custom-loading" trigger="open-loading" message="Iniciando sesión..." [duration]="2000"></ion-loading>
   
           <ion-item *ngIf="message" color="danger" class="error-message">
             <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
