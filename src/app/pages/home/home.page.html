@@ -13,7 +13,14 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-loading class="custom-loading" trigger="close-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
+
+<ion-loading 
+  #logoutLoading 
+  class="custom-loading" 
+  message="Cerrando sesión..." 
+  [duration]="2000">
+</ion-loading>
+
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="welcome-section">
     <h3>¡Bienvenido {{displayName}}!</h3>

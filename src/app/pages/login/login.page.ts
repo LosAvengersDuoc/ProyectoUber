@@ -35,7 +35,7 @@ export class LoginPage {
       return;
     }
 
-    this.isLoading = true;
+    console.log(this.isLoading);
 
     try {
       const user = this.users.find(
@@ -44,7 +44,7 @@ export class LoginPage {
 
       if (user) {
         setTimeout(async () => {
-          this.isLoading = false;
+        this.isLoading = false;
           await this.storage.create();
 
           localStorage.setItem('username', this.username);
