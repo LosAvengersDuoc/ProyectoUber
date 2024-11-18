@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
-import { Storage } from '@ionic/storage-angular'; // Asegúrate de importar Storage
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +11,9 @@ export class LoginPage {
   username: string = '';
   password: string = '';
   message: string = '';
+  isLoading: boolean = false;
 
-  users: { username: string, password: string }[] = [
+  users: { username: string; password: string }[] = [
     { username: 'admin', password: '1234' },
     { username: 'admin1', password: '1234' },
     { username: 'admin2', password: '1234' },
@@ -34,28 +35,41 @@ export class LoginPage {
       return;
     }
 
-    const user = this.users.find(u => u.username === this.username && u.password === this.password);
-    if (user) {
-            await this.storage.create();
-            
-        localStorage.setItem('username', this.username);
+    this.isLoading = true;
 
-        const profile = await this.storage.get(`profile_${this.username}`);
-        
-        if (profile) {
-            localStorage.setItem('displayName', `${profile.firstName} ${profile.lastName}`);
-        }
+    try {
+      const user = this.users.find(
+        (u) => u.username === this.username && u.password === this.password
+      );
 
-        let extras: NavigationExtras = {
-            state: { user: this.username }
-        };
+      if (user) {
+        setTimeout(async () => {
+          this.isLoading = false;
+          await this.storage.create();
 
-        this.router.navigate(['/home'], extras);
-    } else {
-        this.message = 'Login con error';
+          localStorage.setItem('username', this.username);
+
+          const profile = await this.storage.get(`profile_${this.username}`);
+          if (profile) {
+            localStorage.setItem(
+              'displayName',
+              `${profile.firstName} ${profile.lastName}`
+            );
+          }
+
+          let extras: NavigationExtras = {
+            state: { user: this.username },
+          };
+          this.router.navigate(['/home'], extras);
+        }, 1000);
+      } else {
+        this.isLoading = false;
+        this.message = 'Usuario o contraseña incorrectos.';
+      }
+    } catch (error) {
+      this.isLoading = false;
+      this.message = 'Ocurrió un error al procesar el login.';
+      console.error('Error en el login:', error);
     }
-
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
   }
 }
