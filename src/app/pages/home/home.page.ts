@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { Storage } from '@ionic/storage-angular';
 
@@ -11,6 +11,8 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class HomePage implements OnInit, AfterViewInit {
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
+  @ViewChild('logoutLoading', { static: false }) logoutLoading!: HTMLIonLoadingElement;
+  
   map!: L.Map;
   markerLayer!: L.LayerGroup;
   routeLayer!: L.LayerGroup;
@@ -157,7 +159,6 @@ export class HomePage implements OnInit, AfterViewInit {
     this.showCreateTrip = true;
   }
 
-  // Cerrar sesión
   async logout() {
     const alert = await this.alertController.create({
       header: 'Confirmar cierre de sesión',
@@ -166,23 +167,28 @@ export class HomePage implements OnInit, AfterViewInit {
         {
           text: 'Cancelar',
           role: 'cancel',
-          cssClass: 'secondary'
+          cssClass: 'secondary',
         },
         {
           text: 'Confirmar',
-          handler: () => {
-            // Lógica de cierre de sesión
-            this.displayName = '';
-            localStorage.removeItem('username');
-            this.router.navigate(['/login']);
-          }
-        }
-      ]
+          handler: async () => {
+            // Muestra el ion-loading
+            await this.logoutLoading.present();
+
+            // Simula el cierre de sesión (puedes reemplazarlo con la lógica real)
+            setTimeout(() => {
+              this.displayName = '';
+              localStorage.removeItem('username');
+              this.router.navigate(['/login']);
+              this.logoutLoading.dismiss(); // Cierra el ion-loading después de completar la lógica
+            }, 2000);
+          },
+        },
+      ],
     });
 
     await alert.present();
   }
-
   // Función para buscar ubicación
   private async searchLocation(query: string, isDestination: boolean) {
     if (!query) return null;
