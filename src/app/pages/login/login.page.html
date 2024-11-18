@@ -63,12 +63,13 @@
           Ingresa
         </ion-button>
 
-        <ion-loading
-          *ngIf="isLoading"
-          [isOpen]="isLoading"
-          message="Iniciando sesión..."
-          spinner="crescent"
-        ></ion-loading>
+        <ion-loading 
+            #loginLoading 
+            class="custom-loading" 
+            message="Iniciando sesión..." 
+            [duration]="2000"
+            spinner="crescent">
+        </ion-loading>
 
         <ion-item *ngIf="message" color="danger" class="error-message">
           <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
