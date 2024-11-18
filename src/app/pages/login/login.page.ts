@@ -35,8 +35,6 @@ export class LoginPage {
       return;
     }
 
-    this.isLoading = true;
-
     console.log(this.isLoading);
 
     try {
