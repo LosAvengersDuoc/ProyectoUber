@@ -14,12 +14,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-loading 
-  #logoutLoading 
-  class="custom-loading" 
-  message="Cerrando sesión..." 
-  [duration]="2000">
-</ion-loading>
+<ion-loading
+  #logoutLoading
+  class="custom-loading"
+  message="Cerrando sesión..."
+  [duration]="2000"
+></ion-loading>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="welcome-section">
@@ -28,11 +28,17 @@
   </div>
 
   <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="originQuery"
-      placeholder="Ingrese dirección de origen"
-      (ionInput)="filterDestinations($event)"
-    ></ion-searchbar>
+    <!-- Punto de partida fijo -->
+    <ion-item>
+      <ion-label position="stacked">Punto de partida</ion-label>
+      <ion-input value="Duoc UC San Joaquín" readonly></ion-input>
+    </ion-item>
+
+    <!-- Punto de destino ingresado por el usuario -->
+    <ion-item>
+      <ion-label position="stacked">Punto de destino</ion-label>
+      <ion-input [(ngModel)]="destinationQuery" placeholder="Ingresa tu dirección de destino"></ion-input>
+    </ion-item>
   </ion-toolbar>
 
   <ion-button class="trazar-button" expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
@@ -47,25 +53,24 @@
 </ion-content>
 
 <ion-toolbar>
-
-    <ion-tabs>
-        <ion-tab-bar slot="bottom">
-            <ion-tab-button routerLink="/home" routerDirection="root">
-                <ion-icon name="home"></ion-icon>
-                Inicio
-            </ion-tab-button>
-            <ion-tab-button routerLink="/services" routerDirection="root">
-                <ion-icon name="apps"></ion-icon>
-                Servicios
-            </ion-tab-button>
-            <ion-tab-button routerLink="/activity" routerDirection="root">
-                <ion-icon name="reader"></ion-icon>
-                Actividad
-            </ion-tab-button>
-            <ion-tab-button routerLink="/profile" routerDirection="root">
-                <ion-icon name="person"></ion-icon>
-                Perfil
-            </ion-tab-button>
-        </ion-tab-bar>
-    </ion-tabs>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button routerLink="/home" routerDirection="root">
+        <ion-icon name="home"></ion-icon>
+        Inicio
+      </ion-tab-button>
+      <ion-tab-button routerLink="/services" routerDirection="root">
+        <ion-icon name="apps"></ion-icon>
+        Servicios
+      </ion-tab-button>
+      <ion-tab-button routerLink="/activity" routerDirection="root">
+        <ion-icon name="reader"></ion-icon>
+        Actividad
+      </ion-tab-button>
+      <ion-tab-button routerLink="/profile" routerDirection="root">
+        <ion-icon name="person"></ion-icon>
+        Perfil
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-toolbar>
