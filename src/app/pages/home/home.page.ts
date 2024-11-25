@@ -118,6 +118,15 @@ export class HomePage implements OnInit, AfterViewInit {
             this.distanceInfo = `Distancia: ${distance.toFixed(
               2
             )} km. En auto: ${carTime} mins, caminando: ${walkingTime} mins`;
+
+            // Guardar la ruta en el localStorage
+            this.saveRoute({
+              origin: this.duocUcSanJoaquin,
+              destination: destination,
+              route: latLngs,
+              distance: distance,
+              duration: carTime,
+            });
           }
         })
         .catch((error) => {
@@ -168,22 +177,35 @@ export class HomePage implements OnInit, AfterViewInit {
     }
   }
 
+  // Guardar la ruta en el localStorage
+  private saveRoute(route: any) {
+    const storedRoutes = JSON.parse(localStorage.getItem('sharedRoutes') || '[]');
+    storedRoutes.push(route);
+    localStorage.setItem('sharedRoutes', JSON.stringify(storedRoutes));
+  }
+
   async shareLocation() {
+    // Verifica si hay una ruta trazada antes de mostrar el mensaje
+    if (!this.destinationQuery || !this.distanceInfo) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, traza una ruta antes de compartir.',
+        buttons: ['Cerrar'],
+      });
+      await alert.present();
+      return;
+    }
+
     const alert = await this.alertController.create({
-      header: 'Ubicación Compartida',
+      header: '¡Ruta compartida!',
       message: `
-        <div style="text-align: left;">
-          <p><strong>Origen:</strong> Duoc UC San Joaquín</p>
-          <p><strong>Destino:</strong> ${
-            this.destinationQuery || 'No especificado'
-          }</p>
-        </div>
+            Ruta guardada con éxito, ¡se está buscando un auto-parner para ti!
       `,
       buttons: [
         {
-          text: 'Cerrar',
+          text: 'Aceptar',
           role: 'cancel',
-          cssClass: 'secondary',
+          cssClass: 'primary',
         },
       ],
     });
