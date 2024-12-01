@@ -17,7 +17,8 @@ export class HomePage implements OnInit, AfterViewInit {
   destinationMarker: any;
   displayName: string = localStorage.getItem('displayName') || '';
   distanceInfo: string = '';
-  destinationQuery: string = '';
+  passengerDestination: string = '';
+  driverDestination: string = '';
 
   // Coordenadas de Duoc UC San Joaquín como origen fijo
   private readonly duocUcSanJoaquin = { lat: -33.502916, lon: -70.613207 };
@@ -91,10 +92,15 @@ export class HomePage implements OnInit, AfterViewInit {
 
   async traceRoute() {
     const origin = this.duocUcSanJoaquin; // Origen fijo
-    const destination = await this.searchLocation(this.destinationQuery, true);
 
-    if (destination) {
-      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${destination.lon},${destination.lat}?overview=full&geometries=geojson`;
+    // Buscar el destino del pasajero y el destino del conductor
+    const passengerDestination = await this.searchLocation(this.passengerDestination, true);
+    const driverDestination = await this.searchLocation(this.driverDestination, false);
+
+    if (passengerDestination && driverDestination) {
+      // Calcular la ruta entre el conductor y el pasajero
+      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat};${driverDestination.lon},${driverDestination.lat}?overview=full&geometries=geojson`;
+      
       fetch(routeService)
         .then((response) => response.json())
         .then((data) => {
@@ -113,20 +119,8 @@ export class HomePage implements OnInit, AfterViewInit {
             const distance = data.routes[0].distance / 1000;
             const durationInSeconds = data.routes[0].duration;
             const carTime = Math.ceil(durationInSeconds / 60);
-            const walkingTime = Math.ceil((durationInSeconds * 1.5) / 60);
 
-            this.distanceInfo = `Distancia: ${distance.toFixed(
-              2
-            )} km. En auto: ${carTime} mins, caminando: ${walkingTime} mins`;
-
-            // Guardar la ruta en el localStorage
-            this.saveRoute({
-              origin: this.duocUcSanJoaquin,
-              destination: destination,
-              route: latLngs,
-              distance: distance,
-              duration: carTime,
-            });
+            this.distanceInfo = `Distancia total: ${distance.toFixed(2)} km. Tiempo estimado en auto: ${carTime} mins.`;
           }
         })
         .catch((error) => {
@@ -134,16 +128,14 @@ export class HomePage implements OnInit, AfterViewInit {
           alert('Hubo un problema al trazar la ruta.');
         });
     } else {
-      alert('Por favor, ingresa un destino válido.');
+      alert('Por favor, ingresa un destino válido para el pasajero y el conductor.');
     }
   }
 
-  async searchLocation(query: string, isDestination: boolean) {
+  async searchLocation(query: string, isPassenger: boolean) {
     if (!query) return null;
 
-    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(
-      query
-    )}`;
+    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(query)}`;
     const response = await fetch(geocodeService);
     const data = await response.json();
 
@@ -153,20 +145,19 @@ export class HomePage implements OnInit, AfterViewInit {
       const lon = parseFloat(location.lon);
 
       const markerIcon = L.icon({
-        iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        iconUrl: isPassenger
+          ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
         iconSize: [32, 32],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32],
       });
 
-      if (isDestination) {
-        if (this.destinationMarker)
-          this.markerLayer.removeLayer(this.destinationMarker);
-        this.destinationMarker = L.marker([lat, lon], { icon: markerIcon })
-          .bindPopup(`Destino: ${query}`)
-          .openPopup();
-        this.markerLayer.addLayer(this.destinationMarker);
-      }
+      const marker = L.marker([lat, lon], { icon: markerIcon }).bindPopup(
+        isPassenger ? `Destino del pasajero: ${query}` : `Destino del conductor: ${query}`
+      );
+
+      this.markerLayer.addLayer(marker);
 
       this.map.setView([lat, lon], 14);
 
@@ -185,8 +176,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async shareLocation() {
-    // Verifica si hay una ruta trazada antes de mostrar el mensaje
-    if (!this.destinationQuery || !this.distanceInfo) {
+    if (!this.passengerDestination || !this.driverDestination || !this.distanceInfo) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Por favor, traza una ruta antes de compartir.',
@@ -198,9 +188,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     const alert = await this.alertController.create({
       header: '¡Ruta compartida!',
-      message: `
-            Ruta guardada con éxito, ¡se está buscando un auto-parner para ti!
-      `,
+      message: `Ruta guardada con éxito, ¡se está buscando un auto-parner para ti!`,
       buttons: [
         {
           text: 'Aceptar',
