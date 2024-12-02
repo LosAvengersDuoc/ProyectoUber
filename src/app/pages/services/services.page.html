@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+    <ion-toolbar class="services">
+      <ion-segment value="light" color="light">
+        <ion-segment-button color="light">
+          <ion-label>Servicios</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-loading
+    #servicesLoading
+    class="custom-loading"
+    message="Buscando coincidencias..."
+    [duration]="2000"
+  ></ion-loading>
+  
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <div class="services-section">
+      <h3>Encuentra a alguien para compartir tu viaje</h3>
+      <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
+    </div>
+  
+    <ion-toolbar>
+      <!-- Buscar destino -->
+      <ion-item>
+        <ion-label position="stacked">Tu Destino</ion-label>
+        <ion-input [(ngModel)]="destination" placeholder="Ingresa tu destino"></ion-input>
+      </ion-item>
+    </ion-toolbar>
+  
+    <ion-button class="find-match-button" expand="full" (click)="findMatch()">Buscar coincidencias</ion-button>
+  
+    <!-- Lista de resultados -->
+    <ion-list>
+      <ion-item *ngFor="let match of matches">
+        <ion-label>
+          <h2>{{ match.name }}</h2>
+          <p>Destino: {{ match.destination }}</p>
+          <p>Proximidad: {{ match.proximity }} km</p>
+        </ion-label>
+        <ion-button (click)="requestRide(match)" fill="outline" color="primary">Solicitar viaje</ion-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button routerLink="/home" routerDirection="root">
+          <ion-icon name="home"></ion-icon>
+          Inicio
+        </ion-tab-button>
+        <ion-tab-button routerLink="/services" routerDirection="root">
+          <ion-icon name="apps"></ion-icon>
+          Servicios
+        </ion-tab-button>
+        <ion-tab-button routerLink="/activity" routerDirection="root">
+          <ion-icon name="reader"></ion-icon>
+          Actividad
+        </ion-tab-button>
+        <ion-tab-button routerLink="/profile" routerDirection="root">
+          <ion-icon name="person"></ion-icon>
+          Perfil
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+  

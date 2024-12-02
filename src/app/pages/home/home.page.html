@@ -33,20 +33,14 @@
       <ion-label position="stacked">Punto de partida</ion-label>
       <ion-input value="Duoc UC San Joaquín" readonly></ion-input>
     </ion-item>
-
+  
     <!-- Destino del pasajero -->
     <ion-item>
       <ion-label position="stacked">Destino del pasajero</ion-label>
       <ion-input [(ngModel)]="passengerDestination" placeholder="Ingresa el destino del pasajero"></ion-input>
     </ion-item>
-
-    <!-- Destino del conductor -->
-    <ion-item>
-      <ion-label position="stacked">Destino del conductor</ion-label>
-      <ion-input [(ngModel)]="driverDestination" placeholder="Ingresa el destino del conductor"></ion-input>
-    </ion-item>
   </ion-toolbar>
-
+  
   <ion-button class="trazar-button" expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
 
   <div #map id="map" class="map-container"></div>
