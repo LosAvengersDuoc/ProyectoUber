@@ -1,5 +1,6 @@
 import { Storage } from '@ionic/storage-angular';
 import { Component, ViewChild } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-services',
@@ -13,6 +14,7 @@ export class ServicesPage {
   filterProximity: boolean = false;
   filterVehicleAvailability: boolean = false;
   noMatchesFound: boolean = false;
+  showToast: boolean = false;
 
   matches: any[] = [];
 
@@ -23,8 +25,9 @@ export class ServicesPage {
     { name: 'Usuario 4', destination: 'Plaza de Maipú', lat: -33.4597, lon: -70.8505 },
   ];
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage, private toastController: ToastController) {}
 
+  
   ngOnInit() {
     this.storage.create();
   }
@@ -54,7 +57,6 @@ export class ServicesPage {
     }
   }
 
-
   calculateProximity(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -66,6 +68,7 @@ export class ServicesPage {
     const distance = R * c;
     return distance;
   }
+  
 
   findMatch(userLat: number, userLon: number) {
     this.matches = this.otherUsers.map(user => {
@@ -83,7 +86,21 @@ export class ServicesPage {
     console.log('Coincidencias encontradas:', this.matches);
   }
 
-  requestRide(match: any) {
+  async requestRide(match: any) {
     console.log(`Solicitando viaje con ${match.name} hacia ${match.destination}`);
+
+    this.showToast = true;
+
+    const toast = await this.toastController.create({
+      message: 'Match completado',
+      duration: 2000, // Duración del toast en milisegundos
+      position: 'bottom', // Posición en la pantalla
+      color: 'success' // Color del toast
+    });
+
+    // Mostrar el toast
+    await toast.present();
+
+    // Puedes agregar aquí cualquier lógica adicional si es necesario
   }
 }

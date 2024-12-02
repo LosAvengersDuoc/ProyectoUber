@@ -16,19 +16,21 @@
     spinner="crescent">
   </ion-loading>
   
+  <ion-toast 
+    *ngIf="showToast" 
+    message="Match completado" 
+    duration="2000" 
+    position="bottom" 
+    color="success">
+    </ion-toast>
+
+
   <ion-content [fullscreen]="true" class="ion-padding">
     <div class="services-section">
       <h3>Encuentra a alguien para compartir tu viaje</h3>
       <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
     </div>
-  
-    <ion-toolbar>
-      <!-- Buscar destino -->
-      <ion-item>
-        <ion-label position="stacked">Tu Destino</ion-label>
-        <ion-input [(ngModel)]="destination" placeholder="Ingresa tu destino"></ion-input>
-      </ion-item>
-    </ion-toolbar>
+
   
     <ion-button class="find-match-button" expand="full" (click)="findMatches()">Buscar coincidencias</ion-button>
   
