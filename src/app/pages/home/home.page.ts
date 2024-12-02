@@ -92,34 +92,30 @@ export class HomePage implements OnInit, AfterViewInit {
 
   async traceRoute() {
     const origin = this.duocUcSanJoaquin; // Origen fijo
-
-    // Buscar el destino del pasajero y el destino del conductor
+  
+    // Buscar el destino del pasajero
     const passengerDestination = await this.searchLocation(this.passengerDestination, true);
-    const driverDestination = await this.searchLocation(this.driverDestination, false);
-
-    if (passengerDestination && driverDestination) {
-      // Calcular la ruta entre el conductor y el pasajero
-      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat};${driverDestination.lon},${driverDestination.lat}?overview=full&geometries=geojson`;
-      
+  
+    if (passengerDestination) {
+      // Calcular la ruta entre el origen y el destino del pasajero
+      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat}?overview=full&geometries=geojson`;
+  
       fetch(routeService)
         .then((response) => response.json())
         .then((data) => {
           if (data && data.routes && data.routes.length > 0) {
             const routeCoordinates = data.routes[0].geometry.coordinates;
-            const latLngs = routeCoordinates.map((coord: any) => [
-              coord[1],
-              coord[0],
-            ]);
+            const latLngs = routeCoordinates.map((coord: any) => [coord[1], coord[0]]);
             const routeLine = L.polyline(latLngs, { color: 'blue', weight: 4 });
-
+  
             this.routeLayer.clearLayers();
             this.routeLayer.addLayer(routeLine);
             this.map.fitBounds(routeLine.getBounds());
-
+  
             const distance = data.routes[0].distance / 1000;
             const durationInSeconds = data.routes[0].duration;
             const carTime = Math.ceil(durationInSeconds / 60);
-
+  
             this.distanceInfo = `Distancia total: ${distance.toFixed(2)} km. Tiempo estimado en auto: ${carTime} mins.`;
           }
         })
@@ -128,9 +124,10 @@ export class HomePage implements OnInit, AfterViewInit {
           alert('Hubo un problema al trazar la ruta.');
         });
     } else {
-      alert('Por favor, ingresa un destino válido para el pasajero y el conductor.');
+      alert('Por favor, ingresa un destino válido para el pasajero.');
     }
   }
+  
 
   async searchLocation(query: string, isPassenger: boolean) {
     if (!query) return null;
