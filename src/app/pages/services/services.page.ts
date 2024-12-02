@@ -11,50 +11,60 @@ export class ServicesPage {
   @ViewChild('servicesLoading', { static: false }) servicesLoading!: HTMLIonLoadingElement;
 
   destination: string = '';
-  filterProximity: boolean = false;
-  filterVehicleAvailability: boolean = false;
   noMatchesFound: boolean = false;
   showToast: boolean = false;
 
   matches: any[] = [];
-
-  otherUsers = [
-    { name: 'Usuario 1', destination: 'Centro Comercial', lat: -33.4602, lon: -70.6483 },
-    { name: 'Usuario 2', destination: 'Duoc UC San Joaquín', lat: -33.4949, lon: -70.7217 },
-    { name: 'Usuario 3', destination: 'Parque Arauco', lat: -33.4675, lon: -70.6111 },
-    { name: 'Usuario 4', destination: 'Plaza de Maipú', lat: -33.4597, lon: -70.8505 },
-  ];
+  currentUser: any = null; // Datos del usuario conectado
 
   constructor(private storage: Storage, private toastController: ToastController) {}
 
-  
-  ngOnInit() {
-    this.storage.create();
+  async ngOnInit() {
+    await this.storage.create();
+    this.loadCurrentUser();
+  }
+
+  async loadCurrentUser() {
+    const username = localStorage.getItem('username');
+    if (username) {
+      this.currentUser = await this.storage.get(`route_${username}`);
+      console.log('Usuario actual:', this.currentUser);
+    }
   }
 
   async findMatches() {
     await this.servicesLoading.present();
 
-    this.getUserLocation();
+    if (this.currentUser && this.currentUser.role === 'pasajero') {
+      const allUsers = await this.getAllUsers();
+      const userLat = this.currentUser.passengerDestination.lat;
+      const userLon = this.currentUser.passengerDestination.lon;
 
-    this.servicesLoading.dismiss();
+      this.matches = allUsers
+        .filter(user => 
+          user.role === 'conductor' && // Solo conductores
+          user.username !== localStorage.getItem('username') && // Excluir al usuario actual
+          this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon) <= 10 // Proximidad
+        )
+        .map(user => ({
+          ...user,
+          proximity: this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon),
+        }));
+
+      this.noMatchesFound = this.matches.length === 0;
+      console.log('Coincidencias encontradas:', this.matches);
+    } else {
+        console.log(this.currentUser.role)
+    }
+
+    await this.servicesLoading.dismiss();
   }
 
-  async getUserLocation() {
-    const username = localStorage.getItem('username');
-    if (username) {
-      const routeData = await this.storage.get(`route_${username}`);
-      if (routeData && routeData.passengerDestination) {
-        const { lat, lon } = routeData.passengerDestination;
-        console.log(`Ubicación del usuario: Lat: ${lat}, Lon: ${lon}`);
-        
-        this.findMatch(lat, lon);
-      } else {
-        console.log('No se encontró la ubicación del usuario en Storage');
-      }
-    } else {
-      console.log('No hay nombre de usuario en el localStorage');
-    }
+  async getAllUsers() {
+    const keys = await this.storage.keys();
+    const userKeys = keys.filter(key => key.startsWith('route_'));
+    const users = await Promise.all(userKeys.map(key => this.storage.get(key)));
+    return users;
   }
 
   calculateProximity(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -68,39 +78,18 @@ export class ServicesPage {
     const distance = R * c;
     return distance;
   }
-  
-
-  findMatch(userLat: number, userLon: number) {
-    this.matches = this.otherUsers.map(user => {
-      const distance = this.calculateProximity(user.lat, user.lon, userLat, userLon);
-      if (distance <= 10) {
-        return {
-          ...user,
-          proximity: distance,
-        };
-      }
-    }).filter(match => match !== undefined);
-
-    this.noMatchesFound = this.matches.length === 0;
-
-    console.log('Coincidencias encontradas:', this.matches);
-  }
 
   async requestRide(match: any) {
-    console.log(`Solicitando viaje con ${match.name} hacia ${match.destination}`);
-
+    console.log(`Solicitando viaje con ${match.username} hacia ${match.passengerDestination}`);
     this.showToast = true;
 
     const toast = await this.toastController.create({
       message: 'Match completado',
-      duration: 2000, // Duración del toast en milisegundos
-      position: 'bottom', // Posición en la pantalla
-      color: 'success' // Color del toast
+      duration: 2000,
+      position: 'bottom',
+      color: 'success',
     });
 
-    // Mostrar el toast
     await toast.present();
-
-    // Puedes agregar aquí cualquier lógica adicional si es necesario
   }
 }

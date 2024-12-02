@@ -22,38 +22,35 @@
     duration="2000" 
     position="bottom" 
     color="success">
-    </ion-toast>
-
-
+  </ion-toast>
+  
   <ion-content [fullscreen]="true" class="ion-padding">
     <div class="services-section">
       <h3>Encuentra a alguien para compartir tu viaje</h3>
       <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
     </div>
-
   
     <ion-button class="find-match-button" expand="full" (click)="findMatches()">Buscar coincidencias</ion-button>
   
     <ion-alert 
-        *ngIf="noMatchesFound"
-        header="No se han encontrado coincidencias"
-        message="No hay usuarios con vehículos cercanos a tu destino."
-        [buttons]="['OK']">
+      *ngIf="noMatchesFound"
+      header="No se han encontrado coincidencias"
+      message="No hay usuarios con vehículos cercanos a tu destino."
+      [buttons]="['OK']">
     </ion-alert>
-
-    <!-- Lista de resultados -->
+  
     <ion-list>
       <ion-item *ngFor="let match of matches">
         <ion-label>
-          <h2>{{ match.name }}</h2>
-          <p>Destino: {{ match.destination }}</p>
-          <p>Proximidad: {{ match.proximity }} km</p>
+          <h2>{{ match.username }}</h2>
+          <p>Destino: {{ match.passengerDestination1 }}</p>
+          <p>Proximidad: {{ match.proximity | number:'1.2-2' }} km</p>
         </ion-label>
         <ion-button (click)="requestRide(match)" fill="outline" color="primary">Solicitar viaje</ion-button>
       </ion-item>
     </ion-list>
   </ion-content>
-  
+
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
@@ -75,5 +72,4 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-  </ion-toolbar>
-  
+  </ion-toolbar>  
