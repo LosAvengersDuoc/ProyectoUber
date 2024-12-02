@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { Storage } from '@ionic/storage-angular';
@@ -14,16 +14,13 @@ export class HomePage implements OnInit, AfterViewInit {
   map!: L.Map;
   markerLayer!: L.LayerGroup;
   routeLayer!: L.LayerGroup;
-  originMarker: any;
   destinationMarker: any;
-  displayName: string = localStorage.getItem('displayName') || '';  // Aquí se almacenará el nombre del usuario
-  originQuery: string = '';
+  displayName: string = localStorage.getItem('displayName') || '';
   distanceInfo: string = '';
-  showCreateTrip: boolean = true;
-  suggestedDestinations: any[] = [];
-  filteredSuggestions: any[] = [];
+  passengerDestination: string = '';
+  driverDestination: string = '';
 
-  // Coordenadas del Duoc UC San Joaquín como destino fijo
+  // Coordenadas de Duoc UC San Joaquín como origen fijo
   private readonly duocUcSanJoaquin = { lat: -33.502916, lon: -70.613207 };
 
   constructor(
@@ -35,61 +32,86 @@ export class HomePage implements OnInit, AfterViewInit {
   async ngOnInit() {
     await this.storage.create();
     this.loadUserName();
-    this.loadSuggestedDestinations();
   }
 
   private async loadUserName() {
-    const username = localStorage.getItem('username'); // Obtener el username del localStorage
+    const username = localStorage.getItem('username');
     if (username) {
-      const profile = await this.storage.get(`profile_${username}`);  // Obtener el perfil del Storage
+      const profile = await this.storage.get(`profile_${username}`);
       if (profile) {
-        this.displayName = `${profile.firstName} ${profile.lastName}`;  // Asignar el nombre completo
+        this.displayName = `${profile.firstName} ${profile.lastName}`;
       }
     }
   }
 
   ngAfterViewInit() {
     this.initMap();
+
+    // Ajustar el mapa después de que el DOM esté completamente cargado
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+    }, 500);
+  }
+
+  ionViewDidEnter() {
+    if (this.map) {
+      this.map.invalidateSize(); // Recalcular dimensiones del mapa al volver a la vista
+    }
   }
 
   private initMap(): void {
-    this.map = L.map(this.mapElement.nativeElement).setView([-33.4372, -70.6506], 12);
+    this.map = L.map(this.mapElement.nativeElement).setView(
+      [this.duocUcSanJoaquin.lat, this.duocUcSanJoaquin.lon],
+      12
+    );
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
+
     this.markerLayer = L.layerGroup().addTo(this.map);
     this.routeLayer = L.layerGroup().addTo(this.map);
 
-    // Agregar el marcador de destino fijo al inicializar el mapa
-    const destinationIcon = L.icon({
-      iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    const originIcon = L.icon({
+      iconUrl: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
       iconSize: [32, 32],
       iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
+      popupAnchor: [0, -32],
     });
 
-    this.destinationMarker = L.marker([this.duocUcSanJoaquin.lat, this.duocUcSanJoaquin.lon], {
-      icon: destinationIcon
-    })
-      .bindPopup('Destino: Duoc UC San Joaquín')
-      .openPopup();
-    this.markerLayer.addLayer(this.destinationMarker);
+    // Marcador de origen fijo
+    const originMarker = L.marker(
+      [this.duocUcSanJoaquin.lat, this.duocUcSanJoaquin.lon],
+      { icon: originIcon }
+    ).bindPopup('Origen: Duoc UC San Joaquín');
+    this.markerLayer.addLayer(originMarker);
   }
 
   async traceRoute() {
-    const origin = await this.searchLocation(this.originQuery, false);
-    const destination = this.duocUcSanJoaquin;
+    const origin = this.duocUcSanJoaquin; // Origen fijo
 
-    if (origin && destination) {
-      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${destination.lon},${destination.lat}?overview=full&geometries=geojson`;
+    // Buscar el destino del pasajero y el destino del conductor
+    const passengerDestination = await this.searchLocation(this.passengerDestination, true);
+    const driverDestination = await this.searchLocation(this.driverDestination, false);
+
+    if (passengerDestination && driverDestination) {
+      // Calcular la ruta entre el conductor y el pasajero
+      const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat};${driverDestination.lon},${driverDestination.lat}?overview=full&geometries=geojson`;
+      
       fetch(routeService)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data && data.routes && data.routes.length > 0) {
             const routeCoordinates = data.routes[0].geometry.coordinates;
-            const latLngs = routeCoordinates.map((coord: any) => [coord[1], coord[0]]);
+            const latLngs = routeCoordinates.map((coord: any) => [
+              coord[1],
+              coord[0],
+            ]);
             const routeLine = L.polyline(latLngs, { color: 'blue', weight: 4 });
+
             this.routeLayer.clearLayers();
             this.routeLayer.addLayer(routeLine);
             this.map.fitBounds(routeLine.getBounds());
@@ -97,54 +119,81 @@ export class HomePage implements OnInit, AfterViewInit {
             const distance = data.routes[0].distance / 1000;
             const durationInSeconds = data.routes[0].duration;
             const carTime = Math.ceil(durationInSeconds / 60);
-            const walkingTime = Math.ceil((durationInSeconds * 1.5) / 60);
 
-            this.distanceInfo = `Distancia: ${distance.toFixed(2)} km. En auto: ${carTime} mins, caminando: ${walkingTime} mins`;
+            this.distanceInfo = `Distancia total: ${distance.toFixed(2)} km. Tiempo estimado en auto: ${carTime} mins.`;
           }
         })
-        .catch(error => {
-          console.error('Error en la traza de ruta:', error);
+        .catch((error) => {
+          console.error('Error al trazar la ruta:', error);
           alert('Hubo un problema al trazar la ruta.');
         });
-    }
-  }
-
-  // Función para cargar sugerencias de destinos
-  private loadSuggestedDestinations() {
-    this.suggestedDestinations = [
-      { place: 'Parque Arauco', description: 'Centro comercial' },
-      { place: 'Costanera Center', description: 'Centro comercial y oficinas' }
-    ];
-    this.filteredSuggestions = [...this.suggestedDestinations];
-  }
-
-  // Filtrar destinos según el término de búsqueda
-  filterDestinations(event: any) {
-    const searchTerm = event.target.value.toLowerCase();
-    if (searchTerm) {
-      this.filteredSuggestions = this.suggestedDestinations.filter(destination =>
-        destination.place.toLowerCase().includes(searchTerm)
-      );
     } else {
-      this.filteredSuggestions = [...this.suggestedDestinations];
+      alert('Por favor, ingresa un destino válido para el pasajero y el conductor.');
     }
   }
 
-  // Función para compartir la ubicación
+  async searchLocation(query: string, isPassenger: boolean) {
+    if (!query) return null;
+
+    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(query)}`;
+    const response = await fetch(geocodeService);
+    const data = await response.json();
+
+    if (data && data.length > 0) {
+      const location = data[0];
+      const lat = parseFloat(location.lat);
+      const lon = parseFloat(location.lon);
+
+      const markerIcon = L.icon({
+        iconUrl: isPassenger
+          ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32],
+      });
+
+      const marker = L.marker([lat, lon], { icon: markerIcon }).bindPopup(
+        isPassenger ? `Destino del pasajero: ${query}` : `Destino del conductor: ${query}`
+      );
+
+      this.markerLayer.addLayer(marker);
+
+      this.map.setView([lat, lon], 14);
+
+      return { lat, lon };
+    } else {
+      alert('No se encontró la ubicación.');
+      return null;
+    }
+  }
+
+  // Guardar la ruta en el localStorage
+  private saveRoute(route: any) {
+    const storedRoutes = JSON.parse(localStorage.getItem('sharedRoutes') || '[]');
+    storedRoutes.push(route);
+    localStorage.setItem('sharedRoutes', JSON.stringify(storedRoutes));
+  }
+
   async shareLocation() {
+    if (!this.passengerDestination || !this.driverDestination || !this.distanceInfo) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, traza una ruta antes de compartir.',
+        buttons: ['Cerrar'],
+      });
+      await alert.present();
+      return;
+    }
+
     const alert = await this.alertController.create({
-      header: 'Ubicación Compartida',
-      message: `
-        <div style="text-align: left;">
-          <p><strong>Origen:</strong> ${this.originQuery || 'No especificado'}</p>
-          <p><strong>Destino:</strong> Duoc UC San Joaquín</p>
-        </div>
-      `,
+      header: '¡Ruta compartida!',
+      message: `Ruta guardada con éxito, ¡se está buscando un auto-parner para ti!`,
       buttons: [
         {
-          text: 'Cerrar',
+          text: 'Aceptar',
           role: 'cancel',
-          cssClass: 'secondary',
+          cssClass: 'primary',
         },
       ],
     });
@@ -152,12 +201,6 @@ export class HomePage implements OnInit, AfterViewInit {
     await alert.present();
   }
 
-  // Mostrar formulario para añadir destino
-  goToAddDestination() {
-    this.showCreateTrip = true;
-  }
-
-  // Cerrar sesión
   async logout() {
     const alert = await this.alertController.create({
       header: 'Confirmar cierre de sesión',
@@ -166,62 +209,19 @@ export class HomePage implements OnInit, AfterViewInit {
         {
           text: 'Cancelar',
           role: 'cancel',
-          cssClass: 'secondary'
+          cssClass: 'secondary',
         },
         {
           text: 'Confirmar',
           handler: () => {
-            // Lógica de cierre de sesión
             this.displayName = '';
             localStorage.removeItem('username');
             this.router.navigate(['/login']);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
-  }
-
-  // Función para buscar ubicación
-  private async searchLocation(query: string, isDestination: boolean) {
-    if (!query) return null;
-    const geocodeService = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=CL&q=${encodeURIComponent(query)}`;
-    const response = await fetch(geocodeService);
-    const data = await response.json();
-    
-    if (data && data.length > 0) {
-      const location = data[0];
-      const lat = parseFloat(location.lat);
-      const lon = parseFloat(location.lon);
-      const markerIcon = L.icon({
-        iconUrl: isDestination
-          ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
-          : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      });
-      
-      if (isDestination) {
-        if (this.destinationMarker) this.markerLayer.removeLayer(this.destinationMarker);
-        this.destinationMarker = L.marker([lat, lon], { icon: markerIcon })
-          .bindPopup(`Destino: Duoc UC San Joaquín`)
-          .openPopup();
-        this.markerLayer.addLayer(this.destinationMarker);
-      } else {
-        if (this.originMarker) this.markerLayer.removeLayer(this.originMarker);
-        this.originMarker = L.marker([lat, lon], { icon: markerIcon })
-          .bindPopup(`Origen: ${query}`)
-          .openPopup();
-        this.markerLayer.addLayer(this.originMarker);
-      }
-      this.map.setView([lat, lon], 14);
-
-      return { lat, lon };
-    } else {
-      alert('No se encontró la ubicación.');
-      return null;
-    }
   }
 }

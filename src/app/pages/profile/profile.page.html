@@ -52,6 +52,18 @@
                 <ion-toggle [(ngModel)]="hasVehicle" [disabled]="!isEditing" slot="end"></ion-toggle>
             </ion-item>
             
+            <ion-item *ngIf="hasVehicle">
+                <ion-label>Cantidad de Pasajeros:</ion-label>
+                <ion-select [(ngModel)]="passengerCount" [disabled]="!isEditing" placeholder="Seleccionar" slot="end">
+                    <ion-select-option value="1">1</ion-select-option>
+                    <ion-select-option value="2">2</ion-select-option>
+                    <ion-select-option value="3">3</ion-select-option>
+                    <ion-select-option value="4">4</ion-select-option>
+                    <ion-select-option value="5">5</ion-select-option>
+                    <ion-select-option value="6+">6 o más</ion-select-option>
+                </ion-select>
+            </ion-item>
+            
             <br>
             <ion-button class="mod-button" expand="block" *ngIf="!isEditing" (click)="enableEditing()">Modificar Perfil</ion-button>
             <ion-button class="guardar-button" expand="block" *ngIf="isEditing" (click)="saveProfile()">Guardar Cambios</ion-button>

@@ -13,7 +13,14 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-loading class="custom-loading" trigger="close-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
+
+<ion-loading
+  #logoutLoading
+  class="custom-loading"
+  message="Cerrando sesión..."
+  [duration]="2000"
+></ion-loading>
+
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="welcome-section">
     <h3>¡Bienvenido {{displayName}}!</h3>
@@ -21,11 +28,23 @@
   </div>
 
   <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="originQuery"
-      placeholder="Ingrese dirección de origen"
-      (ionInput)="filterDestinations($event)"
-    ></ion-searchbar>
+    <!-- Punto de partida fijo -->
+    <ion-item>
+      <ion-label position="stacked">Punto de partida</ion-label>
+      <ion-input value="Duoc UC San Joaquín" readonly></ion-input>
+    </ion-item>
+
+    <!-- Destino del pasajero -->
+    <ion-item>
+      <ion-label position="stacked">Destino del pasajero</ion-label>
+      <ion-input [(ngModel)]="passengerDestination" placeholder="Ingresa el destino del pasajero"></ion-input>
+    </ion-item>
+
+    <!-- Destino del conductor -->
+    <ion-item>
+      <ion-label position="stacked">Destino del conductor</ion-label>
+      <ion-input [(ngModel)]="driverDestination" placeholder="Ingresa el destino del conductor"></ion-input>
+    </ion-item>
   </ion-toolbar>
 
   <ion-button class="trazar-button" expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
@@ -40,7 +59,6 @@
 </ion-content>
 
 <ion-toolbar>
-
     <ion-tabs>
         <ion-tab-bar slot="bottom">
             <ion-tab-button routerLink="/home" routerDirection="root">
@@ -62,4 +80,3 @@
         </ion-tab-bar>
     </ion-tabs>
 </ion-toolbar>
->>>>>>> c4eaeb62a0a57766d6508c37e4ffd158d74dd58a

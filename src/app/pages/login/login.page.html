@@ -1,75 +1,90 @@
 <ion-header [translucent]="true" class="ion-no-border login-header">
-    <ion-toolbar class="titulo">
-      <ion-title class="ion-text-center">
-        <h1>TeLlevoAPP</h1>
-        <h6>Organiza tu transporte fácilmente</h6>
-      </ion-title>
+  <ion-toolbar class="titulo">
+    <ion-title class="ion-text-center">
+      <h1>TeLlevoAPP</h1>
+      <h6>Organiza tu transporte fácilmente</h6>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="login-content">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Login</ion-title>
     </ion-toolbar>
   </ion-header>
-  
-  <ion-content [fullscreen]="true" class="login-content">
-    <ion-header collapse="condense">
-      <ion-toolbar>
-        <ion-title size="large">Login</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    
-    <ion-card class="login-card">
-      <ion-card-header>
-        <ion-card-title class="ion-text-center">Bienvenido</ion-card-title>
-        <ion-card-subtitle class="ion-text-center">Ingresa tus credenciales</ion-card-subtitle>
-      </ion-card-header>
-  
-      <ion-card-content>
-        <div class="login-form">
-          <ion-list>
-            <ion-item class="input-item">
-              
-              <ion-icon slot="start" name="person-outline"></ion-icon>
-              <ion-input
-                label="Nombre de usuario"
-                labelPlacement="stacked"
-                [(ngModel)]="username"
-                name="username"
-                type="text"
-                maxlength="8"
-                minlength="3"
-                required
-                autofocus
-              ></ion-input>
-            </ion-item>
-  
-            <ion-item class="input-item">
-              <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
-              <ion-input
-                label="Contraseña"
-                labelPlacement="stacked"
-                [(ngModel)]="password"
-                name="password"
-                type="password"
-                maxlength="4"
-                minlength="4"
-                required
-              ></ion-input>
-            </ion-item>
-          </ion-list>
-  
-          <ion-button id="open-loading" expand="block" (click)="validateLogin()" color="dark" class="login-button">
-            <ion-icon slot="start" name="log-in-outline"></ion-icon>
-            Ingresa
-          </ion-button>
-          <ion-loading class="custom-loading" trigger="open-loading" message="Iniciando sesión..." [duration]="2000"></ion-loading>
-  
-          <ion-item *ngIf="message" color="danger" class="error-message">
-            <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
-            {{ message }}
+
+  <ion-card class="login-card">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Bienvenido</ion-card-title>
+      <ion-card-subtitle class="ion-text-center">Ingresa tus credenciales</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div class="login-form">
+        <ion-list>
+          <ion-item class="input-item">
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-input
+              label="Nombre de usuario"
+              labelPlacement="stacked"
+              [(ngModel)]="username"
+              name="username"
+              type="text"
+              maxlength="8"
+              minlength="3"
+              required
+              autofocus
+            ></ion-input>
           </ion-item>
-  
-          <ion-button fill="clear" color="medium" class="forgot-password" [routerLink]="['/reset-password']">
-            ¿Olvidaste tu contraseña?
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  </ion-content>
-  
+
+          <ion-item class="input-item">
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+            <ion-input
+              label="Contraseña"
+              labelPlacement="stacked"
+              [(ngModel)]="password"
+              name="password"
+              type="password"
+              maxlength="4"
+              minlength="4"
+              required
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-button
+          expand="block"
+          (click)="validateLogin()"
+          color="dark"
+          class="login-button"
+        >
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+          Ingresa
+        </ion-button>
+
+        <ion-loading 
+            #loginLoading 
+            class="custom-loading" 
+            message="Iniciando sesión..." 
+            [duration]="2000"
+            spinner="crescent">
+        </ion-loading>
+
+        <ion-item *ngIf="message" color="danger" class="error-message">
+          <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+          {{ message }}
+        </ion-item>
+
+        <ion-button
+          fill="clear"
+          color="medium"
+          class="forgot-password"
+          [routerLink]="['/reset-password']"
+        >
+          ¿Olvidaste tu contraseña?
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
