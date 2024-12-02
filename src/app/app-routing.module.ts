@@ -32,7 +32,12 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
+  },
+  {
+    path: 'notif',
+    loadChildren: () => import('./pages/notif/notif.module').then( m => m.NotifPageModule)
   }
+
 ];
 
 @NgModule({
