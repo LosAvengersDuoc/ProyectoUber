@@ -8,12 +8,21 @@
     </ion-toolbar>
   </ion-header>
   
-  <ion-loading
+  <ion-loading 
     #servicesLoading
     class="custom-loading"
     message="Buscando coincidencias..."
     [duration]="2000"
-  ></ion-loading>
+    spinner="crescent">
+  </ion-loading>
+  
+  <ion-toast 
+    *ngIf="showToast" 
+    message="Match completado" 
+    duration="2000" 
+    position="bottom" 
+    color="success">
+  </ion-toast>
   
   <ion-content [fullscreen]="true" class="ion-padding">
     <div class="services-section">
@@ -21,29 +30,27 @@
       <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
     </div>
   
-    <ion-toolbar>
-      <!-- Buscar destino -->
-      <ion-item>
-        <ion-label position="stacked">Tu Destino</ion-label>
-        <ion-input [(ngModel)]="destination" placeholder="Ingresa tu destino"></ion-input>
-      </ion-item>
-    </ion-toolbar>
+    <ion-button class="find-match-button" expand="full" (click)="findMatches()">Buscar coincidencias</ion-button>
   
-    <ion-button class="find-match-button" expand="full" (click)="findMatch()">Buscar coincidencias</ion-button>
+    <ion-alert 
+      *ngIf="noMatchesFound"
+      header="No se han encontrado coincidencias"
+      message="No hay usuarios con vehículos cercanos a tu destino."
+      [buttons]="['OK']">
+    </ion-alert>
   
-    <!-- Lista de resultados -->
     <ion-list>
       <ion-item *ngFor="let match of matches">
         <ion-label>
-          <h2>{{ match.name }}</h2>
-          <p>Destino: {{ match.destination }}</p>
-          <p>Proximidad: {{ match.proximity }} km</p>
+          <h2>{{ match.username }}</h2>
+          <p>Destino: {{ match.passengerDestination1 }}</p>
+          <p>Proximidad: {{ match.proximity | number:'1.2-2' }} km</p>
         </ion-label>
         <ion-button (click)="requestRide(match)" fill="outline" color="primary">Solicitar viaje</ion-button>
       </ion-item>
     </ion-list>
   </ion-content>
-  
+
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
@@ -65,5 +72,4 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-  </ion-toolbar>
-  
+  </ion-toolbar>  

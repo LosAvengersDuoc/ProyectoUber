@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
+import { Component, ViewChild } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-services',
@@ -6,41 +8,88 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./services.page.scss'],
 })
 export class ServicesPage {
-  // Variables para el destino y los filtros
+  @ViewChild('servicesLoading', { static: false }) servicesLoading!: HTMLIonLoadingElement;
+
   destination: string = '';
-  filterProximity: boolean = false;
-  filterVehicleAvailability: boolean = false;
+  noMatchesFound: boolean = false;
+  showToast: boolean = false;
 
-  // Lista de coincidencias (sería poblada dinámicamente más adelante)
   matches: any[] = [];
+  currentUser: any = null; // Datos del usuario conectado
 
-  constructor() {}
+  constructor(private storage: Storage, private toastController: ToastController) {}
 
-  // Función para aplicar los filtros
-  applyFilter() {
-    console.log('Aplicando filtros...');
-    console.log('Filtro por cercanía:', this.filterProximity);
-    console.log('Filtro por disponibilidad de vehículo:', this.filterVehicleAvailability);
-    // Aquí es donde implementarías la lógica para aplicar los filtros
+  async ngOnInit() {
+    await this.storage.create();
+    this.loadCurrentUser();
   }
 
-  // Función para buscar coincidencias
-  findMatch() {
-    console.log('Buscando coincidencias para el destino:', this.destination);
-    // Aquí es donde implementarías la lógica para buscar las coincidencias
-    // Puedes simular resultados con un array de ejemplo
-    this.matches = [
-      { name: 'Juan Pérez', destination: this.destination, proximity: 2 },
-      { name: 'María González', destination: this.destination, proximity: 5 },
-      { name: 'Carlos López', destination: this.destination, proximity: 1 },
-    ];
-    console.log('Coincidencias encontradas:', this.matches);
+  async loadCurrentUser() {
+    const username = localStorage.getItem('username');
+    if (username) {
+      this.currentUser = await this.storage.get(`route_${username}`);
+      console.log('Usuario actual:', this.currentUser);
+    }
   }
 
-  // Función para solicitar un viaje
-  requestRide(match: any) {
-    console.log('Solicitando viaje con:', match.name);
-    // Aquí es donde podrías implementar la lógica para solicitar el viaje
-    // Podrías abrir una pantalla de confirmación o iniciar un proceso de solicitud
+  async findMatches() {
+    await this.servicesLoading.present();
+
+    if (this.currentUser && this.currentUser.role === 'pasajero') {
+      const allUsers = await this.getAllUsers();
+      const userLat = this.currentUser.passengerDestination.lat;
+      const userLon = this.currentUser.passengerDestination.lon;
+
+      this.matches = allUsers
+        .filter(user => 
+          user.role === 'conductor' && // Solo conductores
+          user.username !== localStorage.getItem('username') && // Excluir al usuario actual
+          this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon) <= 10 // Proximidad
+        )
+        .map(user => ({
+          ...user,
+          proximity: this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon),
+        }));
+
+      this.noMatchesFound = this.matches.length === 0;
+      console.log('Coincidencias encontradas:', this.matches);
+    } else {
+        console.log(this.currentUser.role)
+    }
+
+    await this.servicesLoading.dismiss();
+  }
+
+  async getAllUsers() {
+    const keys = await this.storage.keys();
+    const userKeys = keys.filter(key => key.startsWith('route_'));
+    const users = await Promise.all(userKeys.map(key => this.storage.get(key)));
+    return users;
+  }
+
+  calculateProximity(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  }
+
+  async requestRide(match: any) {
+    console.log(`Solicitando viaje con ${match.username} hacia ${match.passengerDestination}`);
+    this.showToast = true;
+
+    const toast = await this.toastController.create({
+      message: 'Match completado',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success',
+    });
+
+    await toast.present();
   }
 }

@@ -59,17 +59,18 @@
   
   .custom-loading {
     background-color: #f1f1f1;
-    color: #007bff;
+    color: black;
   }
   
   ion-button {
     margin-top: 15px;
-    --background: #007bff;
+    --background: black;
     --border-radius: 8px;
     color: white;
   }
   
   ion-button:focus {
-    --background: #0056b3;
+    --background: black;
   }
+  
   

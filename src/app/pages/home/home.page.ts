@@ -90,33 +90,77 @@ export class HomePage implements OnInit, AfterViewInit {
     this.markerLayer.addLayer(originMarker);
   }
 
+  private async getUserRole(): Promise<string> {
+    const username = localStorage.getItem('username');
+    if (!username) {
+      console.error('No se encontró el usuario.');
+      return 'desconocido';
+    }
+  
+    const profile = await this.storage.get(`profile_${username}`);
+    if (profile) {
+      return profile.hasVehicle ? 'conductor' : 'pasajero';
+    } else {
+      console.error('No se encontró el perfil del usuario.');
+      return 'desconocido';
+    }
+  }
+  
+
   async traceRoute() {
-    const origin = this.duocUcSanJoaquin; // Origen fijo
+    const origin = this.duocUcSanJoaquin;
+    this.logLocation(origin, 'Origen');
+  
+    // Cargar el rol del usuario (conductor o pasajero)
+    const role = await this.getUserRole();
   
     // Buscar el destino del pasajero
+    const passengerDestination1 = this.passengerDestination;
+
+    console.log(passengerDestination1)
     const passengerDestination = await this.searchLocation(this.passengerDestination, true);
   
     if (passengerDestination) {
-      // Calcular la ruta entre el origen y el destino del pasajero
       const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat}?overview=full&geometries=geojson`;
   
       fetch(routeService)
         .then((response) => response.json())
-        .then((data) => {
+        .then(async (data) => {
           if (data && data.routes && data.routes.length > 0) {
             const routeCoordinates = data.routes[0].geometry.coordinates;
             const latLngs = routeCoordinates.map((coord: any) => [coord[1], coord[0]]);
             const routeLine = L.polyline(latLngs, { color: 'blue', weight: 4 });
   
+            // Mostrar la ruta en el mapa
             this.routeLayer.clearLayers();
             this.routeLayer.addLayer(routeLine);
             this.map.fitBounds(routeLine.getBounds());
   
+            // Calcular distancia y tiempo
             const distance = data.routes[0].distance / 1000;
             const durationInSeconds = data.routes[0].duration;
             const carTime = Math.ceil(durationInSeconds / 60);
   
             this.distanceInfo = `Distancia total: ${distance.toFixed(2)} km. Tiempo estimado en auto: ${carTime} mins.`;
+  
+            // Guardar datos en Ionic Storage
+            const username = localStorage.getItem('username');
+            const routeData = {
+              passengerDestination1,
+              origin,
+              passengerDestination,
+              distance: distance.toFixed(2),
+              duration: carTime,
+              coordinates: routeCoordinates,
+              role,
+            };
+  
+            if (username) {
+              await this.storage.set(`route_${username}`, routeData);
+              console.log('Ruta guardada exitosamente en el Storage:', routeData);
+            } else {
+              console.error('No se encontró el usuario.');
+            }
           }
         })
         .catch((error) => {
@@ -165,15 +209,19 @@ export class HomePage implements OnInit, AfterViewInit {
     }
   }
 
-  // Guardar la ruta en el localStorage
-  private saveRoute(route: any) {
-    const storedRoutes = JSON.parse(localStorage.getItem('sharedRoutes') || '[]');
-    storedRoutes.push(route);
-    localStorage.setItem('sharedRoutes', JSON.stringify(storedRoutes));
+  logLocation(location: any, label: string) {
+    if (location && location.lon && location.lat) {
+      console.log(`${label} - Coordenadas: Lon: ${location.lon}, Lat: ${location.lat}`);
+    } else {
+      console.error(`${label} - Datos de ubicación no válidos:`, location);
+    }
   }
 
   async shareLocation() {
-    if (!this.passengerDestination || !this.driverDestination || !this.distanceInfo) {
+    const username = localStorage.getItem('username');
+    const savedRoute = await this.storage.get(`route_${username}`);
+
+    if (!savedRoute || !this.distanceInfo) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Por favor, traza una ruta antes de compartir.',
@@ -196,6 +244,8 @@ export class HomePage implements OnInit, AfterViewInit {
     });
 
     await alert.present();
+
+    console.log('Ruta compartida:', savedRoute);
   }
 
   async logout() {
