@@ -1,164 +1,165 @@
 #container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-
-.custom-header {
-  background-color: #666666 !important;
-  color: #ffffff !important;
-}
-
-.custom-footer {
-  background-color: #666666 !important;
-  color: #ffffff !important;
-}
-
-#map {
-  width: 100%;
-  height: 60vh;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-.welcome-section {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.welcome-section h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.welcome-section p {
-  font-size: 1rem;
-  color: #666;
-}
-
-.distance-info {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  background-color: #f1f1f1;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-ion-button {
-  margin-top: 15px;
-  --background: #007bff;
-  --border-radius: 8px;
-  color: white;
-}
-
-ion-searchbar {
-  margin-top: 20px;
-  --background: #f9f9f9;
-  --border-radius: 8px;
-}
-
-.marker-start {
-  background-color: #4CAF50;
-  color: #ffffff;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 8px;
-}
-
-.marker-end {
-  background-color: #FF5722;
-  color: #ffffff;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 8px;
-}
-
-ion-card {
-  margin: 10px 0;
-  border-radius: 8px;
-}
-
-ion-card-header {
-  background-color: #f1f1f1;
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
-}
-
-ion-card-title {
-  font-size: 1rem;
-  color: #333;
-}
-
-ion-card-content {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-ion-content {
-  --background: #ffffff;
-}
-
-.home {
-  --background: #34a3a9;
-}
-
-.trazar-button {
-  --background: #201b1b;
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
-}
-
-.compartir-button {
-  --background: #201b1b;
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
-}
-
-.marker-intersection {
-  color: #ffffff;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 8px;
-}
-
-.marker-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-ion-header {
-  --background: #201b1b;
-}
-
-ion-footer {
-  --background: #201b1b;
-}
-
-.footer-buttons {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  #container strong {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  #container p {
+    font-size: 16px;
+    line-height: 22px;
+    color: #8c8c8c;
+    margin: 0;
+  }
+  
+  #container a {
+    text-decoration: none;
+  }
+  
+  .custom-header {
+    background-color: #666666 !important;
+    color: #ffffff !important;
+  }
+  
+  .custom-footer {
+    background-color: #666666 !important;
+    color: #ffffff !important;
+  }
+  
+  #map {
+    width: 100%;
+    height: 60vh;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-section h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .welcome-section p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .distance-info {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  ion-button {
+    margin-top: 15px;
+    --background: #007bff;
+    --border-radius: 8px;
+    color: white;
+  }
+  
+  ion-searchbar {
+    margin-top: 20px;
+    --background: #f9f9f9;
+    --border-radius: 8px;
+  }
+  
+  .marker-start {
+    background-color: #4CAF50;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  
+  .marker-end {
+    background-color: #FF5722;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  
+  ion-card {
+    margin: 10px 0;
+    border-radius: 8px;
+  }
+  
+  ion-card-header {
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  ion-card-title {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  ion-card-content {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  ion-content {
+    --background: #ffffff;
+  }
+  
+  .home {
+    --background: #34a3a9;
+  }
+  
+  .trazar-button {
+    --background: #201b1b;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+  }
+  
+  .compartir-button {
+    --background: #201b1b;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+  }
+  
+  .marker-intersection {
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  
+  .marker-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  ion-header {
+    --background: #201b1b;
+  }
+  
+  ion-footer {
+    --background: #201b1b;
+  }
+  
+  .footer-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  

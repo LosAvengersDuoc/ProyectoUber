@@ -1,56 +1,33 @@
 <ion-header [translucent]="true">
-    <ion-toolbar class="services">
-      <ion-segment value="light" color="light">
-        <ion-segment-button color="light">
-          <ion-label>Servicios</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+    <ion-toolbar>
+      <ion-title>services</ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-loading 
-    #servicesLoading
-    class="custom-loading"
-    message="Buscando coincidencias..."
-    [duration]="2000"
-    spinner="crescent">
-  </ion-loading>
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">services</ion-title>
+      </ion-toolbar>
+    </ion-header>
   
-  <ion-toast 
-    *ngIf="showToast" 
-    message="Match completado" 
-    duration="2000" 
-    position="bottom" 
-    color="success">
-  </ion-toast>
-  
-  <ion-content [fullscreen]="true" class="ion-padding">
-    <div class="services-section">
-      <h3>Encuentra a alguien para compartir tu viaje</h3>
-      <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
-    </div>
-  
-    <ion-button class="find-match-button" expand="full" (click)="findMatches()">Buscar coincidencias</ion-button>
-  
-    <ion-alert 
-      *ngIf="noMatchesFound"
-      header="No se han encontrado coincidencias"
-      message="No hay usuarios con vehículos cercanos a tu destino."
-      [buttons]="['OK']">
-    </ion-alert>
-  
-    <ion-list>
-      <ion-item *ngFor="let match of matches">
-        <ion-label>
-          <h2>{{ match.username }}</h2>
-          <p>Destino: {{ match.passengerDestination1 }}</p>
-          <p>Proximidad: {{ match.proximity | number:'1.2-2' }} km</p>
-        </ion-label>
-        <ion-button (click)="requestRide(match)" fill="outline" color="primary">Solicitar viaje</ion-button>
-      </ion-item>
-    </ion-list>
+    <!-- Contenedor para centrar los botones -->
+    <ion-grid>
+      <ion-row justify-content-center>
+        <ion-col size="12" size-md="6" class="ion-text-center">
+          <!-- Botón para "Crear mi Viaje" -->
+          <ion-button expand="block" routerLink="/maps" routerDirection="forward">
+            Crear mi Viaje
+          </ion-button>
+          <!-- Botón para "Buscar Viajes" -->
+          <ion-button expand="block" routerLink="/match" routerDirection="forward">
+            Buscar Viajes
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-content>
-
+  
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
@@ -62,7 +39,7 @@
           <ion-icon name="apps"></ion-icon>
           Servicios
         </ion-tab-button>
-        <ion-tab-button routerLink="/activity" routerDirection="root">
+        <ion-tab-button routerLink="/notif" routerDirection="root">
           <ion-icon name="reader"></ion-icon>
           Actividad
         </ion-tab-button>
@@ -72,4 +49,5 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-  </ion-toolbar>  
+  </ion-toolbar>
+  
