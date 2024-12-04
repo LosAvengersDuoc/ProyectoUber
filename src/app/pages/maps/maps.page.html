@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="home">
+    <ion-segment value="light" color="light">
+      <ion-segment-button color="light">
+        <ion-label>Viajes</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-buttons slot="end">
+      <ion-button id="close-loading" (click)="logout()">
+        <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-loading
+  #logoutLoading
+  class="custom-loading"
+  message="Cerrando sesión..."
+  [duration]="2000"
+></ion-loading>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="welcome-section">
+    <h3>¡Bienvenido {{displayName}}!</h3>
+    <p>Organiza tu viaje de manera fácil y rápida.</p>
+  </div>
+
+  <ion-toolbar>
+    <!-- Punto de partida fijo -->
+    <ion-item>
+      <ion-label position="stacked">Punto de partida</ion-label>
+      <ion-input value="Duoc UC San Joaquín" readonly></ion-input>
+    </ion-item>
+  
+    <!-- Destino del pasajero -->
+    <ion-item>
+      <ion-label position="stacked">Destino del pasajero</ion-label>
+      <ion-input [(ngModel)]="passengerDestination" placeholder="Ingresa el destino del pasajero"></ion-input>
+    </ion-item>
+  </ion-toolbar>
+  
+  <ion-button class="trazar-button" expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
+
+  <div #map id="map" class="map-container"></div>
+
+  <div *ngIf="distanceInfo" class="distance-info">
+    {{ distanceInfo }}
+  </div>
+
+  <ion-button class="compartir-button" expand="full" (click)="shareLocation()">Compartir mi ubicación con la comunidad</ion-button>
+</ion-content>
+
+<ion-toolbar>
+    <ion-tabs>
+        <ion-tab-bar slot="bottom">
+            <ion-tab-button routerLink="/home" routerDirection="root">
+                <ion-icon name="home"></ion-icon>
+                Inicio
+            </ion-tab-button>
+            <ion-tab-button routerLink="/services" routerDirection="root">
+                <ion-icon name="apps"></ion-icon>
+                Servicios
+            </ion-tab-button>
+            <ion-tab-button routerLink="/notif" routerDirection="root">
+                <ion-icon name="reader"></ion-icon>
+                Actividad
+            </ion-tab-button>
+            <ion-tab-button routerLink="/profile" routerDirection="root">
+                <ion-icon name="person"></ion-icon>
+                Perfil
+            </ion-tab-button>
+        </ion-tab-bar>
+    </ion-tabs>
+</ion-toolbar>

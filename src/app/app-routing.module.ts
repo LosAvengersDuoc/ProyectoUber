@@ -15,8 +15,8 @@ const routes: Routes = [
     canActivate: [NoAuthGuard]
   },
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
+    path: 'maps',
+    loadChildren: () => import('./pages/maps/maps.module').then(m => m.MapsPageModule),
     canActivate: [AuthGuard]
   },
   {
@@ -30,6 +30,21 @@ const routes: Routes = [
     canActivate: [NoAuthGuard]
   },
   {
+    path: 'match',
+    loadChildren: () => import('./pages/match/match.module').then( m => m.MatchPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'notif',
+    loadChildren: () => import('./pages/notif/notif.module').then( m => m.NotifPageModule),
+    canActivate: [AuthGuard]
+  },  
+  {
     path: 'services',
     loadChildren: () => import('./pages/services/services.module').then( m => m.ServicesPageModule),
     canActivate: [AuthGuard]
@@ -37,12 +52,7 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
-  },
-  {
-    path: 'notif',
-    loadChildren: () => import('./pages/notif/notif.module').then( m => m.NotifPageModule)
   }
-
 ];
 
 @NgModule({
