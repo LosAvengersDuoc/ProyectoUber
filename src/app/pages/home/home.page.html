@@ -1,53 +1,58 @@
 <ion-header [translucent]="true">
-    <ion-toolbar class="home">
-      <ion-segment value="light" color="light">
-        <ion-segment-button color="light">
-          <ion-label>Viajes</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-  
-      <ion-buttons slot="end">
-        <ion-button id="close-loading" (click)="logout()">
-          <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-loading
-    #logoutLoading
-    class="custom-loading"
-    message="Cerrando sesión..."
-    [duration]="2000"
-  ></ion-loading>
-  
-  <ion-content [fullscreen]="true" class="ion-padding">
-    <div class="welcome-section">
-      <h3>¡Bienvenido {{displayName}}!</h3>
-      <p>Organiza tu viaje de manera fácil y rápida.</p>
-    </div>
-  
-  </ion-content>
-  
-  <ion-toolbar>
-    <ion-tabs>
-        <ion-tab-bar slot="bottom">
-            <ion-tab-button routerLink="/home" routerDirection="root">
-                <ion-icon name="home"></ion-icon>
-                Inicio
-            </ion-tab-button>
-            <ion-tab-button routerLink="/services" routerDirection="root">
-                <ion-icon name="apps"></ion-icon>
-                Servicios
-            </ion-tab-button>
-            <ion-tab-button routerLink="/notif" routerDirection="root">
-                <ion-icon name="reader"></ion-icon>
-                Actividad
-            </ion-tab-button>
-            <ion-tab-button routerLink="/profile" routerDirection="root">
-                <ion-icon name="person"></ion-icon>
-                Perfil
-            </ion-tab-button>
-        </ion-tab-bar>
-    </ion-tabs>
+  <ion-toolbar class="home">
+    <ion-segment value="light" color="light" class="segment-buttons">
+      <ion-segment-button color="dark" class="highlighted-segment-button">
+        <ion-label>VIAJES</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-buttons slot="end">
+      <ion-button id="close-loading" (click)="logout()">
+        <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-loading #logoutLoading class="custom-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="LogoDuoc">
+    <img src="assets/icon/logo_duocuc.jpg" alt="LogoDuoc">
+  </div>
+  <div class="welcome-section">
+    <h3>Uber DuocUC</h3>
+    <h4>¡Bienvenido A Tu APP De Viajes Favorita!</h4>
+    <p> Organiza tus viajes de forma rápida y sencilla con compañeros de la universidad.</p>
+    <p>Disfruta de un trayecto seguro y cómodo
+      directamente desde Duoc UC San Joaquín. ¡Es momento de viajar de manera eficiente!</p>
+  </div>
+  <ion-button expand="block" class="trazar-button">Trazar Ruta</ion-button>
+  <ion-button expand="block" class="compartir-button">Compartir Ruta</ion-button>
+  <div class="logoApp">
+    <img src="assets/icon/logo_app.jpg" alt="LogoApp">
+  </div>
+</ion-content>
+
+<ion-toolbar>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button routerLink="/home" routerDirection="root">
+        <ion-icon name="home"></ion-icon>
+        Inicio
+      </ion-tab-button>
+      <ion-tab-button routerLink="/services" routerDirection="root">
+        <ion-icon name="apps"></ion-icon>
+        Servicios
+      </ion-tab-button>
+      <ion-tab-button routerLink="/notif" routerDirection="root">
+        <ion-icon name="reader"></ion-icon>
+        Actividad
+      </ion-tab-button>
+      <ion-tab-button routerLink="/profile" routerDirection="root">
+        <ion-icon name="person"></ion-icon>
+        Perfil
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-toolbar>
