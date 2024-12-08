@@ -1,15 +1,61 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>notif</ion-title>
+  <ion-toolbar class="header-banner">
+    <ion-title>Historial</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">notif</ion-title>
+    <ion-toolbar class="header-banner">
+      <ion-title size="large">Historial</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="message-content" >
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mensaje 1</ion-card-title>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Here's a small text description for the card content. Nothing more, nothing less.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mensaje 2</ion-card-title>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Here's a small text description for the card content. Nothing more, nothing less.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mensaje 3</ion-card-title>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Here's a small text description for the card content. Nothing more, nothing less.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mensaje 4</ion-card-title>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Here's a small text description for the card content. Nothing more, nothing less.
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
 
 
@@ -26,7 +72,7 @@
             </ion-tab-button>
             <ion-tab-button routerLink="/notif" routerDirection="root">
                 <ion-icon name="reader"></ion-icon>
-                Actividad
+                Historial
             </ion-tab-button>
             <ion-tab-button routerLink="/profile" routerDirection="root">
                 <ion-icon name="person"></ion-icon>
