@@ -1,5 +1,5 @@
 <ion-header [translucent]="true" class="ion-no-border login-header">
-  <ion-toolbar class="titulo">
+  <ion-toolbar class="header-banner">
     <ion-title class="ion-text-center">
       <h1>TeLlevoAPP</h1>
       <h6>Organiza tu transporte fácilmente</h6>
@@ -7,14 +7,14 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="login-content">
+<ion-content [fullscreen]="true">
   <ion-header collapse="condense">
-    <ion-toolbar>
+    <ion-toolbar class="header-banner">
       <ion-title size="large">Login</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-card class="login-card">
+  <ion-card class="button-card">
     <ion-card-header>
       <ion-card-title class="ion-text-center">Bienvenido</ion-card-title>
       <ion-card-subtitle class="ion-text-center">Ingresa tus credenciales</ion-card-subtitle>
@@ -56,7 +56,7 @@
         <ion-button
           expand="block"
           (click)="validateLogin()"
-          color="dark"
+
           class="login-button"
         >
           <ion-icon slot="start" name="log-in-outline"></ion-icon>

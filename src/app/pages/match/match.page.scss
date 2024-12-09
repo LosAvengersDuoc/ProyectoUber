@@ -1,8 +1,4 @@
-.services {
-    --background: #34a3a9;
-  }
-  
-  .services-section {
+    .services-section {
     text-align: center;
     margin-bottom: 20px;
   }
@@ -64,13 +60,32 @@
   
   ion-button {
     margin-top: 15px;
-    --background: black;
+    --background: linear-gradient(90deg, #34a3a9, #007bff);
     --border-radius: 8px;
     color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
   ion-button:focus {
     --background: black;
   }
   
+
+  /* Importar la fuente Roboto desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+// Banner superior
+.header-banner {
+    --background: linear-gradient(90deg, #34a3a9, #007bff);
+    --color: #ffffff; // Letras blancas
+    text-align: center;
+    font-weight: bold;
+  }
+
+  ion-tab-bar {
+    --background: #007bff;
+    --color-selected: #ffffff;
+    --color: #b3e5fc;
+  }
   

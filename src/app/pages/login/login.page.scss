@@ -29,9 +29,13 @@
   }
   
   .login-button {
-    margin-top: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+    --background: linear-gradient(90deg, #34a3a9, #007bff);
+    --border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+    transition: all 0.3s ease-in-out;
   }
   
   .error-message {
@@ -47,4 +51,27 @@
     color: black;
     text-decoration: underline;
   }
-  
+
+  // Banner superior
+.header-banner {
+  --background: linear-gradient(90deg, #34a3a9, #007bff);
+  --color: #ffffff; // Letras blancas
+  text-align: center;
+  font-weight: bold;
+}
+
+// Animación sutil al cargar la card
+.button-card {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

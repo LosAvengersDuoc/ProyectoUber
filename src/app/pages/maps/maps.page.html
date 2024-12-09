@@ -1,10 +1,6 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="home">
-    <ion-segment value="light" color="light">
-      <ion-segment-button color="light">
-        <ion-label>Viajes</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+  <ion-toolbar class="header-banner">
+    <ion-title>Viajes</ion-title>
 
     <ion-buttons slot="end">
       <ion-button id="close-loading" (click)="logout()">
@@ -41,7 +37,7 @@
     </ion-item>
   </ion-toolbar>
   
-  <ion-button class="trazar-button" expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
+  <ion-button expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>
 
   <div #map id="map" class="map-container"></div>
 
@@ -49,7 +45,7 @@
     {{ distanceInfo }}
   </div>
 
-  <ion-button class="compartir-button" expand="full" (click)="shareLocation()">Compartir mi ubicación con la comunidad</ion-button>
+  <ion-button expand="full" (click)="shareLocation()">Compartir mi ubicación con la comunidad</ion-button>
 </ion-content>
 
 <ion-toolbar>

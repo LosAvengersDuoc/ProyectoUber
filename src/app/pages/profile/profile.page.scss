@@ -91,22 +91,6 @@
     }
   }
   
-  // Animación sutil al cargar la card
-  .button-card {
-    animation: fadeIn 1s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
   // Ajustes para el tab bar
   ion-tab-bar {
     --background: #007bff;
