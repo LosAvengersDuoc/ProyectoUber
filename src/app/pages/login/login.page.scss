@@ -36,6 +36,11 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 10px 0;
     transition: all 0.3s ease-in-out;
+
+    &:hover {
+      --background: linear-gradient(90deg, #007bff, #34a3a9);
+      transform: scale(1.02);
+    }
   }
   
   .error-message {

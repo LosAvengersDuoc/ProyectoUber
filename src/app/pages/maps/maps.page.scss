@@ -171,6 +171,11 @@ ion-footer {
     color: white;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      --background: linear-gradient(90deg, #007bff, #34a3a9);
+      transform: scale(1.02);
+    }
   }
   
   ion-tab-bar {

@@ -1,4 +1,4 @@
-    .services-section {
+  .services-section {
     text-align: center;
     margin-bottom: 20px;
   }
@@ -19,37 +19,37 @@
     box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
   }
   
-  ion-card {
+  .ion-card {
     margin: 10px 0;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(33, 150, 243, 0.1);
   }
   
-  ion-card-header {
+  .ion-card-header {
     background-color: #f1f1f1;
     border-bottom: 1px solid #ccc;
     padding: 10px;
   }
   
-  ion-card-title {
+  .ion-card-title {
     font-size: 1.1rem;
     color: #333;
   }
   
-  ion-card-content {
+  .ion-card-content {
     font-size: 0.9rem;
     color: #666;
   }
   
-  ion-header {
+  .ion-header {
     --background: #201b1b;
   }
   
-  ion-footer {
+  .ion-footer {
     --background: #201b1b;
   }
   
-  ion-toolbar {
+  .ion-toolbar {
     --background: #34a3a9;
   }
   
@@ -58,21 +58,40 @@
     color: black;
   }
   
-  ion-button {
+  .find-match-button {
     margin-top: 15px;
     --background: linear-gradient(90deg, #34a3a9, #007bff);
     --border-radius: 8px;
     color: white;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      --background: linear-gradient(90deg, #007bff, #34a3a9);
+      transform: scale(1.02);
+    }
+  }
+
+  .ion-button {
+    margin-top: 15px;
+    --background: linear-gradient(90deg, #34a3a9, #007bff);
+    --border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      --background: linear-gradient(90deg, #007bff, #34a3a9);
+      transform: scale(1.02);
+    }
   }
   
-  ion-button:focus {
+  .ion-button:focus {
     --background: black;
   }
   
 
-  /* Importar la fuente Roboto desde Google Fonts */
+/* Importar la fuente Roboto desde Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 // Banner superior
@@ -88,4 +107,5 @@
     --color-selected: #ffffff;
     --color: #b3e5fc;
   }
+
   
