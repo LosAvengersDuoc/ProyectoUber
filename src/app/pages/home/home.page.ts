@@ -11,7 +11,6 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class HomePage implements OnInit, AfterViewInit {
 
-
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
   map!: L.Map;
   markerLayer!: L.LayerGroup;
@@ -21,8 +20,10 @@ export class HomePage implements OnInit, AfterViewInit {
   distanceInfo: string = '';
   passengerDestination: string = '';
   driverDestination: string = '';
-
-
+  
+  helpClicked: boolean = false; // Para controlar si se pulsó el botón de ayuda
+  roleSelected: boolean = false; // Para saber si ya se seleccionó el rol
+  role: string = ''; // Para almacenar el rol seleccionado
 
   constructor(
     private router: Router,
@@ -36,7 +37,6 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Ajustar el mapa después de que el DOM esté completamente cargado
     setTimeout(() => {
       if (this.map) {
         this.map.invalidateSize();
@@ -44,7 +44,6 @@ export class HomePage implements OnInit, AfterViewInit {
     }, 500);
   }
 
- 
   private async loadUserName() {
     const username = localStorage.getItem('username');
     if (username) {
@@ -78,5 +77,23 @@ export class HomePage implements OnInit, AfterViewInit {
 
     await alert.present();
   }
-}
 
+  // Método para abrir las opciones de ayuda
+  openHelp() {
+    this.helpClicked = true;
+  }
+
+  // Método para cerrar la sección de ayuda
+  closeHelp() {
+    this.helpClicked = false;
+    this.roleSelected = false;
+    this.role = '';
+  }
+
+  // Método para seleccionar el rol
+  selectRole(role: string) {
+    this.role = role;
+    this.roleSelected = true;
+    this.helpClicked = false; // Ocultar el botón de "Ayuda" al seleccionar el rol
+  }
+}

@@ -32,9 +32,11 @@
   
     <!-- Destino del pasajero -->
     <ion-item>
-      <ion-label position="stacked">Destino del pasajero</ion-label>
-      <ion-input [(ngModel)]="passengerDestination" placeholder="Ingresa el destino del pasajero"></ion-input>
-    </ion-item>
+        <ion-label position="stacked">Destino del pasajero</ion-label>
+        <ion-input [(ngModel)]="passengerCommune" placeholder="Ingresa la comuna"></ion-input>
+        <ion-input [(ngModel)]="passengerStreet" placeholder="Ingresa la calle"></ion-input>
+      </ion-item>
+      
   </ion-toolbar>
   
   <ion-button expand="full" (click)="traceRoute()">Trazar Ruta</ion-button>

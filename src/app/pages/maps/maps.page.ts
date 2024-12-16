@@ -18,6 +18,8 @@ export class MapsPage implements OnInit, AfterViewInit {
   displayName: string = localStorage.getItem('displayName') || '';
   distanceInfo: string = '';
   passengerDestination: string = '';
+  passengerCommune: string = '';
+  passengerStreet: string = '';
   driverDestination: string = '';
 
   // Coordenadas de Duoc UC San Joaquín como origen fijo
@@ -115,10 +117,10 @@ export class MapsPage implements OnInit, AfterViewInit {
     const role = await this.getUserRole();
   
     // Buscar el destino del pasajero
-    const passengerDestination1 = this.passengerDestination;
+    const passengerDestination1 = this.passengerStreet + ", " + this.passengerCommune;
 
     console.log(passengerDestination1)
-    const passengerDestination = await this.searchLocation(this.passengerDestination, true);
+    const passengerDestination = await this.searchLocation(passengerDestination1, true);
   
     if (passengerDestination) {
       const routeService = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${passengerDestination.lon},${passengerDestination.lat}?overview=full&geometries=geojson`;
@@ -143,9 +145,12 @@ export class MapsPage implements OnInit, AfterViewInit {
   
             this.distanceInfo = `Distancia total: ${distance.toFixed(2)} km. Tiempo estimado en auto: ${carTime} mins.`;
   
+            const userName = this.displayName;
+
             // Guardar datos en Ionic Storage
             const username = localStorage.getItem('username');
             const routeData = {
+              userName,
               passengerDestination1,
               origin,
               passengerDestination,

@@ -14,14 +14,17 @@ export class MatchPage {
   noMatchesFound: boolean = false;
   showToast: boolean = false;
 
+  selectedRide: any = null; // Almacena el viaje solicitado
+
   matches: any[] = [];
-  currentUser: any = null; // Datos del usuario conectado
+  currentUser: any = null;
 
   constructor(private storage: Storage, private toastController: ToastController) {}
 
   async ngOnInit() {
     await this.storage.create();
     this.loadCurrentUser();
+    this.findMatches();
   }
 
   async loadCurrentUser() {
@@ -29,8 +32,15 @@ export class MatchPage {
     if (username) {
       this.currentUser = await this.storage.get(`route_${username}`);
       console.log('Usuario actual:', this.currentUser);
+  
+      // Cargar la solicitud activa del usuario
+      const currentUserKey = `rides_${this.currentUser.userName}`;
+      this.selectedRide = await this.storage.get(currentUserKey);
+      console.log('Viaje activo:', this.selectedRide);
     }
   }
+  
+  
 
   async findMatches() {
     await this.servicesLoading.present();
@@ -40,11 +50,12 @@ export class MatchPage {
       const userLat = this.currentUser.passengerDestination.lat;
       const userLon = this.currentUser.passengerDestination.lon;
 
+      console.log('Usuarios disponibles:', allUsers);
+
       this.matches = allUsers
         .filter(user => 
-          user.role === 'conductor' && // Solo conductores
-          user.username !== localStorage.getItem('username') && // Excluir al usuario actual
-          this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon) <= 10 // Proximidad
+          //user.role === 'conductor' && // Solo conductores
+          this.calculateProximity(user.passengerDestination.lat, user.passengerDestination.lon, userLat, userLon) > 0 // Proximidad
         )
         .map(user => ({
           ...user,
@@ -80,16 +91,61 @@ export class MatchPage {
   }
 
   async requestRide(match: any) {
-    console.log(`Solicitando viaje con ${match.username} hacia ${match.passengerDestination}`);
-    this.showToast = true;
-
+    if (this.selectedRide) {
+      // Mostrar confirmación si ya hay un viaje seleccionado
+      const alert = document.createElement('ion-alert');
+      alert.header = 'Confirmar reemplazo';
+      alert.message = 'Ya tienes un viaje solicitado. ¿Quieres reemplazarlo con este?';
+      alert.buttons = [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Reemplazar',
+          handler: async () => {
+            await this.replaceRide(match);
+          },
+        },
+      ];
+      document.body.appendChild(alert);
+      await alert.present();
+    } else {
+      // Solicitar un nuevo viaje
+      await this.saveRide(match);
+    }
+  }
+  
+  async saveRide(match: any) {
+    this.selectedRide = match; // Guardar el viaje solicitado
+    const currentUserKey = `rides_${this.currentUser.userName}`;
+    await this.storage.set(currentUserKey, match);
+    console.log('Viaje solicitado:', match);
+  
+    // Mostrar Toast de confirmación
     const toast = await this.toastController.create({
-      message: 'Match completado',
+      message: 'Viaje solicitado exitosamente',
       duration: 2000,
       position: 'bottom',
       color: 'success',
     });
-
     await toast.present();
   }
+  
+  async replaceRide(match: any) {
+    this.selectedRide = match; // Reemplazar el viaje solicitado
+    const currentUserKey = `rides_${this.currentUser.userName}`;
+    await this.storage.set(currentUserKey, match);
+    console.log('Viaje reemplazado:', match);
+  
+    // Mostrar Toast de reemplazo
+    const toast = await this.toastController.create({
+      message: 'El viaje ha sido reemplazado exitosamente',
+      duration: 2000,
+      position: 'bottom',
+      color: 'warning',
+    });
+    await toast.present();
+  }
+  
 }
