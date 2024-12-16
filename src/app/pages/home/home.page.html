@@ -1,52 +1,95 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="header-banner">
-    <ion-title>Viajes</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button id="close-loading" (click)="logout()">
-        <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
+    <ion-toolbar class="header-banner">
+      <ion-title>Viajes</ion-title>
+  
+      <ion-buttons slot="end">
+        <ion-button id="close-loading" (click)="logout()">
+          <ion-icon name="log-out-outline" color="light" size="large"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-loading #logoutLoading class="custom-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
+  
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <div class="LogoDuoc">
+      <img src="assets/icon/logo_duocuc.jpg" alt="LogoDuoc">
+    </div>
+    <div class="welcome-section">
+      <h3>Uber DuocUC</h3>
+      <h4>¡Bienvenido A Tu APP De Viajes Favorita!</h4>
+      <p>Organiza tus viajes de forma rápida y sencilla con compañeros de la universidad.</p>
+      <p>Disfruta de un trayecto seguro y cómodo
+        directamente desde Duoc UC San Joaquín. ¡Es momento de viajar de manera eficiente!</p>
+    </div>
+  
+    <!-- Botón de ayuda estilizado debajo de la bienvenida, solo visible si no se ha hecho clic en "Conductor" o "Pasajero" -->
+    <ion-button 
+      *ngIf="!helpClicked && !roleSelected" 
+      expand="block" 
+      class="help-button"
+      (click)="openHelp()">
+      <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+      Ayuda
+    </ion-button>
+  
+    <!-- Sección de opciones para conductor o pasajero -->
+    <div *ngIf="helpClicked && !roleSelected">
+      <ion-button expand="block" (click)="selectRole('Conductor')">
+        Soy Conductor
       </ion-button>
-    </ion-buttons>
+      <ion-button expand="block" (click)="selectRole('Pasajero')">
+        Soy Pasajero
+      </ion-button>
+    </div>
+  
+    <!-- Sección con el mensaje correspondiente después de seleccionar el rol -->
+    <div *ngIf="roleSelected">
+      <div *ngIf="role === 'Conductor'">
+        <h3>Guía para Conductor</h3>
+        <p>1. Ingresa a tu perfil para activar el modo conductor.</p>
+        <p>2. Crea un punto de destino desde "Servicios", y luego "Crear Viaje".</p>
+        <p>3. Espera a que otros usuarios soliciten tu viaje.</p>
+      </div>
+      
+      <div *ngIf="role === 'Pasajero'">
+        <h3>Guía para Pasajero</h3>
+        <p>1. Crea un punto de destino desde "Servicios", y luego "Crear Viaje".</p>
+        <p>2. Tras crear el viaje, busca un viaje disponible desde "Servicios", y luego "Buscar Viajes".</p>
+        <p>3. Selecciona un conductor y solicita el viaje.</p>
+      </div>
+  
+      <ion-button expand="block" (click)="closeHelp()">
+        Cerrar Ayuda
+      </ion-button>
+    </div>
+  
+    <div class="logoApp">
+      <img src="assets/icon/logo_app.jpg" alt="LogoApp">
+    </div>
+  </ion-content>
+  
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button routerLink="/home" routerDirection="root">
+          <ion-icon name="home"></ion-icon>
+          Inicio
+        </ion-tab-button>
+        <ion-tab-button routerLink="/services" routerDirection="root">
+          <ion-icon name="apps"></ion-icon>
+          Servicios
+        </ion-tab-button>
+        <ion-tab-button routerLink="/notif" routerDirection="root">
+          <ion-icon name="reader"></ion-icon>
+          Historial
+        </ion-tab-button>
+        <ion-tab-button routerLink="/profile" routerDirection="root">
+          <ion-icon name="person"></ion-icon>
+          Perfil
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
   </ion-toolbar>
-</ion-header>
-
-<ion-loading #logoutLoading class="custom-loading" message="Cerrando sesión..." [duration]="2000"></ion-loading>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="LogoDuoc">
-    <img src="assets/icon/logo_duocuc.jpg" alt="LogoDuoc">
-  </div>
-  <div class="welcome-section">
-    <h3>Uber DuocUC</h3>
-    <h4>¡Bienvenido A Tu APP De Viajes Favorita!</h4>
-    <p> Organiza tus viajes de forma rápida y sencilla con compañeros de la universidad.</p>
-    <p>Disfruta de un trayecto seguro y cómodo
-      directamente desde Duoc UC San Joaquín. ¡Es momento de viajar de manera eficiente!</p>
-  </div>
-  <div class="logoApp">
-    <img src="assets/icon/logo_app.jpg" alt="LogoApp">
-  </div>
-</ion-content>
-
-<ion-toolbar>
-  <ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button routerLink="/home" routerDirection="root">
-        <ion-icon name="home"></ion-icon>
-        Inicio
-      </ion-tab-button>
-      <ion-tab-button routerLink="/services" routerDirection="root">
-        <ion-icon name="apps"></ion-icon>
-        Servicios
-      </ion-tab-button>
-      <ion-tab-button routerLink="/notif" routerDirection="root">
-        <ion-icon name="reader"></ion-icon>
-        Historial
-      </ion-tab-button>
-      <ion-tab-button routerLink="/profile" routerDirection="root">
-        <ion-icon name="person"></ion-icon>
-        Perfil
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-toolbar>
+  

@@ -1,83 +1,68 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="header-banner">
-    <ion-title>Historial</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
     <ion-toolbar class="header-banner">
-      <ion-title size="large">Historial</ion-title>
+      <ion-title>Viaje Solicitado</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <div class="message-content" >
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Mensaje 1</ion-card-title>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        Here's a small text description for the card content. Nothing more, nothing less.
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Mensaje 2</ion-card-title>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        Here's a small text description for the card content. Nothing more, nothing less.
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Mensaje 3</ion-card-title>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        Here's a small text description for the card content. Nothing more, nothing less.
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Mensaje 4</ion-card-title>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        Here's a small text description for the card content. Nothing more, nothing less.
-      </ion-card-content>
-    </ion-card>
-  </div>
-</ion-content>
-
-
-<ion-toolbar>
+  
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar class="header-banner">
+        <ion-title size="large">Viaje Solicitado</ion-title>
+      </ion-toolbar>
+    </ion-header>
+  
+    <div class="message-content">
+      <ng-container *ngIf="selectedRide; else noRide">
+        <!-- Mostrar información del viaje solicitado -->
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Información del viaje</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Lugar de partida:</strong> Duoc UC San Joaquín</p>
+            <p><strong>Lugar de destino:</strong> {{ selectedRide.passengerDestination1 }}</p>
+            <p><strong>Conductor:</strong> {{ selectedRide.userName }}</p>
+          </ion-card-content>
+          <ion-footer>
+            <ion-button expand="full" color="danger" (click)="confirmDeleteRide()">
+              Cancelar viaje
+            </ion-button>
+          </ion-footer>
+        </ion-card>
+      </ng-container>
+  
+      <!-- Mostrar mensaje si no hay un viaje solicitado o si el usuario es conductor -->
+      <ng-template #noRide>
+        <div class="no-ride">
+          <ion-text color="medium">
+            <h2 *ngIf="isConductor">Eres conductor y no puedes tener un viaje solicitado.</h2>
+            <h2 *ngIf="!isConductor">No tienes un viaje solicitado.</h2>
+          </ion-text>
+        </div>
+      </ng-template>
+    </div>
+  </ion-content>
+  
+  <ion-toolbar>
     <ion-tabs>
-        <ion-tab-bar slot="bottom">
-            <ion-tab-button routerLink="/home" routerDirection="root">
-                <ion-icon name="home"></ion-icon>
-                Inicio
-            </ion-tab-button>
-            <ion-tab-button routerLink="/services" routerDirection="root">
-                <ion-icon name="apps"></ion-icon>
-                Servicios
-            </ion-tab-button>
-            <ion-tab-button routerLink="/notif" routerDirection="root">
-                <ion-icon name="reader"></ion-icon>
-                Historial
-            </ion-tab-button>
-            <ion-tab-button routerLink="/profile" routerDirection="root">
-                <ion-icon name="person"></ion-icon>
-                Perfil
-            </ion-tab-button>
-        </ion-tab-bar>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button routerLink="/home" routerDirection="root">
+          <ion-icon name="home"></ion-icon>
+          Inicio
+        </ion-tab-button>
+        <ion-tab-button routerLink="/services" routerDirection="root">
+          <ion-icon name="apps"></ion-icon>
+          Servicios
+        </ion-tab-button>
+        <ion-tab-button routerLink="/notif" routerDirection="root">
+          <ion-icon name="reader"></ion-icon>
+          Historial
+        </ion-tab-button>
+        <ion-tab-button routerLink="/profile" routerDirection="root">
+          <ion-icon name="person"></ion-icon>
+          Perfil
+        </ion-tab-button>
+      </ion-tab-bar>
     </ion-tabs>
-</ion-toolbar>
+  </ion-toolbar>
+  

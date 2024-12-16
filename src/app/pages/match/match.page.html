@@ -26,7 +26,7 @@
       <p>Busca personas cercanas que puedan ofrecerte un viaje a tu destino.</p>
     </div>
   
-    <ion-button class="find-match-button" expand="full" (click)="findMatches()">Buscar coincidencias</ion-button>
+    <ion-button class="find-match-button" expand="full" (click)="findMatches()">Actualizar coincidencias</ion-button>
   
     <ion-alert 
       *ngIf="noMatchesFound"
@@ -36,15 +36,29 @@
     </ion-alert>
   
     <ion-list>
-      <ion-item *ngFor="let match of matches">
-        <ion-label>
-          <h2>{{ match.username }}</h2>
-          <p>Destino: {{ match.passengerDestination1 }}</p>
-          <p>Proximidad: {{ match.proximity | number:'1.2-2' }} km</p>
-        </ion-label>
-        <ion-button (click)="requestRide(match)" fill="outline" color="primary">Solicitar viaje</ion-button>
-      </ion-item>
-    </ion-list>
+        <ion-item *ngFor="let match of matches">
+          <ion-label>
+            <h2>Usuario: {{ match.userName }}</h2>
+            <p>Destino: {{ match.passengerDestination1 }}</p>
+            <p>Proximidad: {{ match.proximity | number:'1.2-2' }} km</p>
+          </ion-label>
+          <ion-button 
+            *ngIf="!selectedRide || selectedRide.userName !== match.userName" 
+            (click)="requestRide(match)" 
+            fill="outline" 
+            color="primary">
+            Solicitar viaje
+          </ion-button>
+          <ion-button 
+            *ngIf="selectedRide && selectedRide.userName === match.userName" 
+            fill="solid" 
+            color="success" 
+            disabled>
+            Viaje solicitado
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      
   </ion-content>
 
   <ion-toolbar>
